@@ -3,11 +3,12 @@
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/core/core.hpp"
 #include<ctime>
+#include <sstream>
 
 using namespace cv;
 using namespace std;
 
-int isValid(int i , int j , Mat a)
+int isValid(int i , int j , Mat img)
 {
 	if ( i < img.rows && j < img.cols && i > -1 && j > -1)
 		return 1;
@@ -29,6 +30,7 @@ Mat circle(Mat a, int i, int j, int r)
 
 Mat square(Mat a , int j , int k , int r )
 {
+    int m,n;
     for(m = j - r; m <= j + r; m++)
     {
         for(n = k - r; n <= k + r; n++)
@@ -44,6 +46,7 @@ Mat square(Mat a , int j , int k , int r )
 
 Mat triangle(Mat a , int j , int k , int r )
 {
+    int m,n;
     for(m = j - r; m <= j + r; m++)
     {
         for(n = m; n <= k + r; n++)
@@ -61,27 +64,34 @@ int main()
 {
 	int a[3] = {0,1,2};
 	srand(time(0));
-	number = 1;
+	int number = 10000;
 	while(number--)
 	{
-		obs_number = 7+ rand()%8;
+		int obs_number = 10+ rand()%8;
 		Mat img(300,300,CV_8UC1,Scalar(0));
 		while(obs_number--)
 		{
-			shape = rand()%3;
+			int shape = rand()%3;
 			if(shape == 0)
 			{
-				a = circle(a,rand()%img.rows,rand()%img.cols,10+rand()%10);
+				img = circle(img,rand()%img.rows,rand()%img.cols,12+rand()%10);
 			}
 			else if(shape == 1)
 			{
-				a = square(a,rand()%img.rows,rand()%img.cols,10+rand()%10);
-			}
+			     img = square(img,rand()%img.rows,rand()%img.cols,12+rand()%10);
+		  }
 			else if(shape == 2)
 			{
-				a = triangle(a,rand()%img.rows,rand()%img.cols,10+rand()%10);
+				img = triangle(img,rand()%img.rows,rand()%img.cols,12+rand()%10);
 			}
 		}
+        //std::string s = std::to_string(number);
+        stringstream ss;
+        ss<<number;
+        string s1 = "img";
+        string s2 = ss.str();
+        string s3 = ".jpg";
+        imwrite(s1+s2+s3,img); 
 	}
-	imwrite(strcat(strcat("img",number.str()),".jpg"),img);	
+	return 0;
 }
