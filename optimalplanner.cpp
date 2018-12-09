@@ -4,7 +4,7 @@
 #include <iostream>
 using namespace std;
 using namespace cv;
-Mat img=imread("dfs_path.jpg",0);
+Mat img=imread("img0.jpg",0);
 struct graph_node
 {
 	int x,y;
@@ -138,12 +138,16 @@ int main()
 	namedWindow("chaljabhai",WINDOW_NORMAL);
 	graph_node start,end;
 	graph_node parent[110][110];
-	printf("Input start vertex: ");
-	scanf("%d",&start.x);
-	scanf("%d",&start.y);
-	printf("Input end vertex: ");
-	scanf("%d",&end.x);
-	scanf("%d",&end.y);
+	// printf("Input start vertex: ");
+	// scanf("%d",&start.x);
+	// scanf("%d",&start.y);
+	// printf("Input end vertex: ");
+	// scanf("%d",&end.x);
+	// scanf("%d",&end.y);
+	start.x = 0;
+	start.y = 0;
+	end.x = 99;
+	end.y = 99;
 	BFS(parent,start);
 	print_path(parent,start,end);
 	imshow("chaljabhai",img);
