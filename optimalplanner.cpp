@@ -74,10 +74,10 @@ int isvalid( int i, int j)
 	else
 		return 0;
 }	
-void BFS(graph_node parent[110][110],graph_node v)
+int BFS(graph_node parent[110][110],graph_node v)
 {
 	int i,j,k,l,visited[110][110];
-	int distance[110][110];
+	float distance[110][110];
 	graph_node current,temp;
 
 	for(i=0;i<100;i++)
@@ -96,24 +96,36 @@ void BFS(graph_node parent[110][110],graph_node v)
 	distance[v.x][v.y]=0;
 	parent[v.x][v.y].x=-1;
 	parent[v.x][v.y].y=-1;
-	printf("\nBFS Traversal:");
+	//printf("\nBFS Traversal:");
 	while(!isempty(qP))
 	{
 		current=dequeue(qP);
 		for(k=-1;k<=1;k++)
 			for(l=-1;l<=1;l++)
 			{
+
 				if(!(k==0 and l==0) && isvalid(current.x+k,current.y+l) && visited[current.x+k][current.y+l]==0 && img.at<uchar>(current.x+k,current.y+l)<100)
 				{
+					//cout << "hi";
 					visited[current.x+k][current.y+l]=1;
 					parent[current.x+k][current.y+l]=current;
-					distance[current.x+k][current.y+l]=distance[current.x][current.y]+1;
+
+					if (abs(k)==1 && abs(l)==1)
+						distance[current.x+k][current.y+l]=distance[current.x][current.y]+1.4142;
+					else
+						distance[current.x+k][current.y+l]=distance[current.x][current.y]+1;
+					//cout << distance[current.x+k][current.y+l];
+					if(current.x+k == img.rows-1 && current.y+l == img.cols-1)
+					{
+						return distance[img.rows-1][img.cols-1];
+					}
 					temp.x=current.x+k;
 					temp.y=current.y+l;
 					enqueue(qP,temp);
 				}
 			}
 	}
+	
 }
 
 void print_path(graph_node parent[110][110],graph_node start,graph_node end)
@@ -135,9 +147,10 @@ void print_path(graph_node parent[110][110],graph_node start,graph_node end)
 
 int main()
 {	
-	namedWindow("chaljabhai",WINDOW_NORMAL);
+	//namedWindow("chaljabhai",WINDOW_NORMAL);
 	graph_node start,end;
 	graph_node parent[110][110];
+
 	// printf("Input start vertex: ");
 	// scanf("%d",&start.x);
 	// scanf("%d",&start.y);
@@ -148,9 +161,24 @@ int main()
 	start.y = 0;
 	end.x = 99;
 	end.y = 99;
-	BFS(parent,start);
-	print_path(parent,start,end);
-	imshow("chaljabhai",img);
-	waitKey(0);
-	return 0;
+	int dist[10000];
+	int number = 10000;
+	while(number>1)
+	{
+		stringstream ss;
+        ss<<(10000-number);
+        string s = "dataset/";
+        string s1 = "img";
+        string s2 = ss.str();
+        string s3 = ".jpg";
+        img = imread(s+s1+s2+s3,0);	
+        //cout << img.rows << endl;	
+		dist[10000-number]=BFS(parent,start);
+		cout << dist[10000-number] << endl;
+		number--;
+	}
+	// print_path(parent,start,end);
+	// imshow("chaljabhai",img);
+	// waitKey(0);
+	// return 0;
 }
