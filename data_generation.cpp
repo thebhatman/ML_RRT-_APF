@@ -70,10 +70,10 @@ int main()
     int number = 10000;
     //int num[10000];
     ofstream myfile1;
-    myfile1.open("number.txt");
+    myfile1.open("data/number.txt");
 
     ofstream myfile2;
-    myfile2.open("obst.txt");
+    myfile2.open("data/obst.txt");
     while(number--)
     {
         int obs_number = 4+ rand()%8;
@@ -86,34 +86,15 @@ int main()
         myfile1 << max1 << endl;
         while(obs_number--)
         {
-            int shape = rand()%3;
-            if(shape == 0)
-            {
-                int x = rand()%(img.rows);
-                int y = rand()%(img.cols);
-                int r = 5+rand()%10;
-                img = circle(img,x,y,r);
-                float area = 3.14*r*r;
-                myfile2 << x << " " << y << " " << area << endl;
-            }
-            else if(shape == 1)
-            {
-                int x = rand()%(img.rows);
-                int y = rand()%(img.cols);
-                int r = 5+rand()%10;
-                img = square(img,x,y,r);
-                float area = 4*r*r;
-                myfile2 << x << " " << y << " " << area << endl;
-          }
-            else if(shape == 2)
-            {
-                int x = rand()%(img.rows);
-                int y = rand()%(img.cols);
-                int r = 5+rand()%10;
-                img = triangle(img,x,y,r);
-                float area = 0.5*r*r;
-                myfile2 << x << " " << y << " " << area << endl;
-            }
+            //int shape = rand()%3;
+
+            int x = rand()%(img.rows);
+            int y = rand()%(img.cols);
+            int r = 5+rand()%10;
+            img = circle(img,x,y,r);
+            float area = 3.14*r*r;
+            myfile2 << x << " " << y << " " << area << endl;
+            
         }
         //std::string s = std::to_string(number);
         stringstream ss;
