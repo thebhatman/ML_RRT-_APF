@@ -89,9 +89,11 @@ Mat bin(Mat a)
 
 int main()
 {
-	learning_parameter = 100000000;
-	Mat a(500, 500, CV_8UC1, Scalar(0));
+	float learning_paramter = 10000;
+	//Mat a(500, 500, CV_8UC1, Scalar(0));
+	Mat a = imread("dataset/img0.jpg",0);
 	a=bin(a);
+
 	srand(time(0));
 	int i = 0,j = 0,k = 0, curr_tree_size = 0, m, n, s;
 	potential **pot_field = new potential*[a.rows];
@@ -99,62 +101,8 @@ int main()
 	{
 		pot_field[i] = new potential[a.cols];
 	}
-	obs_centre tempobs;
-	for(i = 1; i <= 8; i++)
-	{
-		j = i*a.rows/8 + rand()%(i*a.rows/6);
-		k = i*a.cols/8 + rand()%(i*a.cols/6);
-		for(m = j - 30; m <= j + 30; m++)
-		{
-			for(n = k - 30; n <= k + 30; n++)
-			{
-				if(isValid(m, n, a))
-				{
-					a.at<uchar>(m,n) = 255;
-					tempobs.i = j;
-					tempobs.j = k;
-					obstacles.push_back(tempobs);
-				}
-			}
-		}
-	}
-	/*j = 250; k = 250;
-	for(m = j - 80; m <= j + 80; m++)
-	{
-		for(n = k - 80; n <= k + 80; n++)
-		{
-			if(isValid(m,n,a))
-			{
-				if(distance(m,n,j,k) <= 80 && distance(m,n,j,k) >= 50)
-				{
-					a.at<uchar>(m,n) = 255;
-					tempobs.i = j;
-					tempobs.j = k;
-					obstacles.push_back(tempobs);
-				}
-			}
-
-		}
-	}
-	for(m = j - 80; m <= j + 80; m++)
-	{
-		for(n = k - 10; n <= k + 10; n++)
-		{
-			if(isValid(m,n,a))
-			{
-				a.at<uchar>(m,n) = 0;
-			}
-		}
-	}*/
-	int OPP=25;
-	int r=10;
-	for(i=a.rows/OPP;i<a.rows-a.rows/OPP;i+=a.rows/OPP)
-	{
-		tempobs.i = a.rows*2/10 + rand()%(a.rows*6/10);
-		tempobs.j = a.cols*2/10 + rand()%(a.cols*6/10);
-		obstacles.push_back(tempobs);
-		a=makeobs(a,tempobs.i,tempobs.j,r);
-	}
+	
+	Mat b = a.clone();
 	node source, dest;
 	cout<<"Enter the co-ordinates of the source"<<endl;
 	cin>>source.curr.x>>source.curr.y;
@@ -210,8 +158,12 @@ int main()
 		}
 		curr_tree_size = srctree.size();
 		here:
+
 		qrand.curr.x = rand()%a.cols;
 		qrand.curr.y = rand()%a.rows;
+		//float adist = dist(qnear, qrand);
+		//qrand.curr.x = (max_step_size*qrand.curr.x + (adist-max_step_size)*qnear.curr.x)/adist;
+		//qrand.curr.y = (max_step_size*qrand.curr.y + (adist-max_step_size)*qnear.curr.y)/adist;
 		mindist = 9999999;
 		int x_co, y_co;
 		x_co = qrand.curr.x; y_co = qrand.curr.y;
@@ -231,7 +183,7 @@ int main()
 			{
 				angle = 1.57;
 			}
-			float magnitude = learning_parameter/pow(distance(qrand.curr.x, qrand.curr.y, obstacles[k].j, obstacles[k].i),2);
+			float magnitude = learning_paramter/pow(distance(qrand.curr.x, qrand.curr.y, obstacles[k].j, obstacles[k].i),2);
 			if(obstacles[k].j > qrand.curr.x && obstacles[k].i > qrand.curr.y)
 			{
 				net_field.magx += -magnitude*cos(angle);
@@ -355,16 +307,6 @@ int main()
 				mindist = d;
 			}
 		}
-		d = dist(qnear, qrand);
-		for(i = 0; i < d; i++)
-		{
-			node q;
-			q.curr.x = (i*qrand.curr.x + (d-i)*qnear.curr.x)/d;
-			q.curr.y = (i*qrand.curr.y + (d-i)*qnear.curr.y)/d;
-			int e = q.curr.y;
-			int f = q.curr.x;
-			if(a.at<uchar>(e,f) > 220) goto here;
-		}
 		if(d > max_step_size)
 		{
 			qnew.curr.x = (max_step_size*qrand.curr.x + (d - max_step_size)*qnear.curr.x)/d;
@@ -374,6 +316,17 @@ int main()
 		{
 			qnew = qrand;
 		}
+		d = dist(qnear, qrand);
+		for(i = 0; i < d; i++)
+		{
+			node q;
+			q.curr.x = (i*qnew.curr.x + (d-i)*qnear.curr.x)/d;
+			q.curr.y = (i*qnew.curr.y + (d-i)*qnear.curr.y)/d;
+			int e = q.curr.y;
+			int f = q.curr.x;
+			if(a.at<uchar>(e,f) > 220) goto here;
+		}
+		
 		
 		for(i = 0; i < curr_tree_size; i++)
 		{
@@ -459,7 +412,7 @@ int main()
 	}
     imshow("star_apf",a);
     namedWindow("Final_apf", WINDOW_NORMAL);
-	Mat b(a.rows, a.cols, CV_8UC1, Scalar(0));
+	
 	k = srctree.size() - 1;
 	while(k !=0 )
 	{
