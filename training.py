@@ -6,9 +6,9 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
 import preprocess
 
-number = preprocess.number("number.txt")
-shortest_distance = preprocess.shortest_dist("dist.txt")
-x,y,area = preprocess.obstacles("obst.txt")
+number = preprocess.number("data/number.txt")
+shortest_distance = preprocess.shortest_dist("data/dist.txt")
+x,y,area = preprocess.obstacles("data/obst.txt")
 
 for i in range(len(number))-1:
 	number[i+1]=number[i]+number[i+1]
