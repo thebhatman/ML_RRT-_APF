@@ -64,7 +64,7 @@ int main()
 {
 	int a[3] = {0,1,2};
 	srand(time(0));
-	int number = 10000;
+	int number = 1;
 	while(number--)
 	{
 		int obs_number = 10+ rand()%8;
