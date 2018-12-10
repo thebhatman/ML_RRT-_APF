@@ -2,9 +2,13 @@
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/core/core.hpp"
 #include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
 using namespace std;
 using namespace cv;
-Mat img=imread("img0.jpg",0);
+#define ROWS 100
+#define COLS 100
+Mat img;
 struct graph_node
 {
 	int x,y;
@@ -74,14 +78,14 @@ int isvalid( int i, int j)
 	else
 		return 0;
 }	
-int BFS(graph_node parent[110][110],graph_node v)
+int BFS(graph_node parent[ROWS][COLS], graph_node v)
 {
-	int i,j,k,l,visited[110][110];
-	float distance[110][110];
+	int i,j,k,l,visited[ROWS][COLS];
+	float distance[ROWS][COLS];
 	graph_node current,temp;
 
-	for(i=0;i<100;i++)
-		for(j=0;j<100;j++)
+	for(i=0;i<ROWS;i++)
+		for(j=0;j<COLS;j++)
 		{
 			parent[i][j].x=-1;
 			parent[i][j].y=-1;
@@ -128,7 +132,7 @@ int BFS(graph_node parent[110][110],graph_node v)
 	
 }
 
-void print_path(graph_node parent[110][110],graph_node start,graph_node end)
+void print_path(graph_node parent[ROWS][COLS], graph_node start, graph_node end)
 {
 	if((start.x == end.x) && (start.y == end.y))
 	{
@@ -143,13 +147,42 @@ void print_path(graph_node parent[110][110],graph_node start,graph_node end)
 		printf(" (%d,%d) ",end.x,end.y);
 		img.at<uchar>(end.x,end.y)=160;
 	}
+	
+}
+
+void approx_path(graph_node parent[ROWS][COLS], graph_node start, graph_node end)
+{
+	int	approx_step = 5;
+	graph_node approx_parent[ROWS][COLS];
+	graph_node u = end, v = end;
+	while(parent[v.x][v.y].x != -1 && parent[v.x][v.y].y != -1)
+	{
+		int i;
+		for(i=0; i<approx_step; i++)
+		{
+			if(parent[v.x][v.y].x == -1 || parent[v.x][v.y].y == -1)
+				break;
+			v = parent[v.x][v.y];
+		}
+
+		approx_parent[u.x][u.y] = v;
+		u = v;
+	}
+	print_path(approx_parent,start,end);
 }
 
 int main()
 {	
-	//namedWindow("chaljabhai",WINDOW_NORMAL);
+	/*namedWindow("Original Image",WINDOW_NORMAL);
+	img = imread("dataset/img1.jpg",0);
+	imshow("Original Image",img);
+	while(1)
+	{
+		int temp = waitKey(10);
+		if(temp == 27) break;
+	}*/
+
 	graph_node start,end;
-	graph_node parent[110][110];
 
 	// printf("Input start vertex: ");
 	// scanf("%d",&start.x);
@@ -159,23 +192,37 @@ int main()
 	// scanf("%d",&end.y);
 	start.x = 0;
 	start.y = 0;
-	end.x = 99;
-	end.y = 99;
-	int dist[10000];
-	int number = 10000;
-	while(number>1)
+	end.x = ROWS-1;
+	end.y = COLS-1;
+	int dist[ROWS*COLS];
+	int number = ROWS*COLS;
+	
+	/*int temp = BFS(parent,start);
+	approx_path(parent,start,end);
+	namedWindow("Final Path",WINDOW_NORMAL);
+	imshow("Final Path",img);
+	while(1)
 	{
+		int temp = waitKey(10);
+		if(temp == 27) break;
+	}
+	return 0;*/
+	while(number>0)
+	{
+		graph_node parent[ROWS][COLS];
 		stringstream ss;
-        ss<<(10000-number);
+        ss<<(ROWS*COLS-number);
         string s = "dataset/";
         string s1 = "img";
         string s2 = ss.str();
         string s3 = ".jpg";
         img = imread(s+s1+s2+s3,0);	
         //cout << img.rows << endl;	
-		dist[10000-number]=BFS(parent,start);
-		cout << dist[10000-number] << endl;
+		dist[ROWS*COLS-number]=BFS(parent,start);
+		//cout << dist[ROWS*COLS-number] << endl;
+		approx_path(parent,start,end);
 		number--;
+		printf("\n");
 	}
 	// print_path(parent,start,end);
 	// imshow("chaljabhai",img);
