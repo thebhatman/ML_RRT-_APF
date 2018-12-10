@@ -2,6 +2,8 @@
 
 We tried to ameliorate the problem of manual setting of Artificial Potential Field constants in the APF woven implementation of the classic RRT* algorithm ( https://github.com/Snehal-Reddy/RRT_Star_With_APF ).
 
+![alt_text](https://github.com/Snehal-Reddy/ML_RRT-_APF/blob/master/images/maxresdefault.jpg)  
+
 We generated 10,000 images with random obstacles.
 
 
