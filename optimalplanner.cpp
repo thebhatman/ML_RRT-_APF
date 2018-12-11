@@ -194,8 +194,8 @@ int main()
 	start.y = 0;
 	end.x = ROWS-1;
 	end.y = COLS-1;
-	int dist[ROWS*COLS];
-	int number = ROWS*COLS;
+	int dist[100000];
+	int number = 100000;
 	
 	/*int temp = BFS(parent,start);
 	approx_path(parent,start,end);
@@ -211,14 +211,14 @@ int main()
 	{
 		graph_node parent[ROWS][COLS];
 		stringstream ss;
-        ss<<(ROWS*COLS-number);
+        ss<<(100000-number);
         string s = "dataset/";
         string s1 = "img";
         string s2 = ss.str();
         string s3 = ".jpg";
         img = imread(s+s1+s2+s3,0);	
         //cout << img.rows << endl;	
-		dist[ROWS*COLS-number]=BFS(parent,start);
+		dist[100000-number]=BFS(parent,start);
 		//cout << dist[ROWS*COLS-number] << endl;
 		approx_path(parent,start,end);
 		number--;
