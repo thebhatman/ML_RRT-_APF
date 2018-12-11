@@ -13,28 +13,39 @@ Mat img;
 
 int main()
 {
-	int number = 10000;
+	int number = 100000;
 	ofstream myfile;
   	myfile.open ("data/features.txt");
+  	int num,x,y;
+  	string s,s1,s2,s3;
 	while(number>=1)
 	{
 		stringstream ss;
-        ss<<(10000-number);
-        string s = "dataset/";
-        string s1 = "img";
-        string s2 = ss.str();
-        string s3 = ".jpg";
-        int num = 0;
-        int x = 0;
-        int y = 0;
+		// if (100000-number==46242)
+		// {
+		// 	myfile << x/num << " " << y/num << " " <<num << endl;
+		// 	continue;
+		// }
+
+        ss<<(100000-number);
+        
+        s = "dataset/";
+        s1 = "img";
+        s2 = ss.str();
+        s3 = ".jpg";
+        num = 0;
+        x = 0;
+        y = 0;
         img = imread(s+s1+s2+s3,0);	
         //cout << img.rows << endl;
         for (int i = 0 ; i < img.rows ; i++)
         {
         	for (int j = 0 ; j < img.cols ; j++)
         	{
-        		if (img.at<uchar>(i,j)>200)
+        		//cout << (int)img.at<uchar>(i,j) << " ";
+        		if ((int)img.at<uchar>(i,j)>150)
         		{
+        			//cout << i << " " << j << " " << (int)img.at<uchar>(i,j) << endl;
         			num++;
         			x+=i;
         			y+=j;
@@ -42,6 +53,10 @@ int main()
         	}
         }
         number--;
-        myfile << x/num << " " << y/num << " " <<num << endl;
+        //cout << 100000-number << " " << num << endl;
+        if (num==0)
+        	myfile << 50 << " " << 50 << " " << 1 << endl;
+        else
+        	myfile << x/num << " " << y/num << " " <<num << endl;
     }
 }
