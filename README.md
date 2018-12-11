@@ -4,7 +4,8 @@ We tried to ameliorate the problem of manual setting of Artificial Potential Fie
 
 ![alt_text](https://github.com/Snehal-Reddy/ML_RRT-_APF/blob/master/images/maxresdefault.jpg)  
 
-We generated 10,000 images with random obstacles.
+We generated 1,00,000 images with random obstacles.They can be accessed at this link-
+https://drive.google.com/open?id=19T3MWMWzlgY7_ybz7Ial-A5Ixky1jM2q
 
 
 ![alt_text](https://github.com/Snehal-Reddy/ML_RRT-_APF/blob/master/images/img0.jpg)  
