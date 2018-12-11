@@ -115,7 +115,7 @@ int main()
 			float dest_dist = dist(path_points[k], dest);
 			float obs_dist = dist(path_points[k], obs_loc);
 			float optimal_slope = slope(path_points[k],path_points[k+1]);
-			float dest_angle = atan2(path_points[k].y-dest.y,path_points[k].x-dest.x);
+			float dest_angle = atan2(-path_points[k].y+dest.y,-path_points[k].x+dest.x);
 			float obs_angle = atan2(path_points[k].y-obs_loc.y,path_points[k].x-obs_loc.x);
 
 			//cout<<"obs_loc = "<<obs_loc.x<<" "<<obs_loc.y<<endl;
@@ -125,8 +125,8 @@ int main()
 			if(optimal_slope*cos(obs_angle) == sin(obs_angle))
 				potential += INT_MAX;
 			
-			else potential += pow(dest_dist,2)*pow(obs_dist,2)*((optimal_slope*cos(dest_angle))-sin(dest_angle))/((optimal_slope*cos(obs_angle)-sin(obs_angle)));
-
+			else potential += pow(dest_dist,2)*(pow(obs_dist,2))*((-optimal_slope*cos(dest_angle))+sin(dest_angle))/((optimal_slope*cos(obs_angle)-sin(obs_angle)));
+			//cout<<"potential = "<<pow(dest_dist,2)*pow(obs_dist,2)*((-optimal_slope*cos(dest_angle))+sin(dest_angle))/((optimal_slope*cos(obs_angle)-sin(obs_angle)))<<endl;
 		}
 		potential /= path_points.size();
 		cout<<potential<<endl;
