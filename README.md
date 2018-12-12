@@ -25,7 +25,7 @@ The results turned out pretty well and the tree converged well towards the targe
 
 
 <p align="center">
-  <img src="https://github.com/Snehal-Reddy/ML_RRT-_APF/blob/master/images/Tree_with_ML1.png"/>
+  <img src="https://github.com/Snehal-Reddy/ML_RRT-_APF/blob/master/images/Tree_with_ML1.png" width = "200" height = "200">
 </p>
 
 
