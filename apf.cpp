@@ -89,9 +89,9 @@ Mat bin(Mat a)
 
 int main()
 {
-	float learning_paramter = 10000;
+	float learning_paramter =  6395050.0915676
 	//Mat a(500, 500, CV_8UC1, Scalar(0));
-	Mat a = imread("dataset/img0.jpg",0);
+	Mat a = imread("dataset/img99999.jpg",0);
 	a=bin(a);
 
 	srand(time(0));
@@ -221,7 +221,7 @@ int main()
 				net_field.magx += magnitude; 
 			}
 		}
-		cout<<"Net repulsive field: "<<net_field.magx<<" "<<net_field.magy<<endl;
+		//cout<<"Net repulsive field: "<<net_field.magx<<" "<<net_field.magy<<endl;
 		float dist_dest = distance(qrand.curr.x, qrand.curr.y, dest.curr.x, dest.curr.y);
 		float dest_slope, dest_angle;
 		if(dest.curr.x - qrand.curr.x != 0)
@@ -232,41 +232,41 @@ int main()
 		else dest_angle = 1.57;
 		if(dest.curr.x > qrand.curr.x && dest.curr.y > qrand.curr.y)
 		{
-			net_field.magx += 500*dist_dest*dist_dest*cos(dest_angle);
-			net_field.magy += 500*dist_dest*dist_dest*sin(dest_angle);
+			net_field.magx += 1*dist_dest*dist_dest*cos(dest_angle);
+			net_field.magy += 1*dist_dest*dist_dest*sin(dest_angle);
 		}
 		if(dest.curr.x < qrand.curr.x && dest.curr.y < qrand.curr.y)
 		{
-			net_field.magx += -500*dist_dest*dist_dest*cos(dest_angle);
-			net_field.magy += -500*dist_dest*dist_dest*sin(dest_angle);
+			net_field.magx += -1*dist_dest*dist_dest*cos(dest_angle);
+			net_field.magy += -1*dist_dest*dist_dest*sin(dest_angle);
 		}
 		if(dest.curr.x > qrand.curr.x && dest.curr.y < qrand.curr.y)
 		{
-			net_field.magx += 500*dist_dest*dist_dest*cos(dest_angle);
-			net_field.magy += -500*dist_dest*dist_dest*sin(dest_angle);
+			net_field.magx += 1*dist_dest*dist_dest*cos(dest_angle);
+			net_field.magy += -1*dist_dest*dist_dest*sin(dest_angle);
 		}
 		if(dest.curr.x < qrand.curr.x && dest.curr.y > qrand.curr.y)
 		{
-			net_field.magx += -500*dist_dest*dist_dest*cos(dest_angle);
-			net_field.magy += 500*dist_dest*dist_dest*sin(dest_angle);
+			net_field.magx += -1*dist_dest*dist_dest*cos(dest_angle);
+			net_field.magy += 1*dist_dest*dist_dest*sin(dest_angle);
 		}
 		if(dest.curr.x == qrand.curr.x && dest.curr.y > qrand.curr.y)
 		{
-			net_field.magy += 500*dist_dest*dist_dest;
+			net_field.magy += 1*dist_dest*dist_dest;
 		}
 		if(dest.curr.x == qrand.curr.x && dest.curr.y < qrand.curr.y)
 		{
-			net_field.magy += -500*dist_dest*dist_dest;
+			net_field.magy += -1*dist_dest*dist_dest;
 		}
 		if(dest.curr.y == qrand.curr.y && dest.curr.x > qrand.curr.x)
 		{
-			net_field.magx += 500*dist_dest*dist_dest;
+			net_field.magx += 1*dist_dest*dist_dest;
 		}
 		if(dest.curr.y == qrand.curr.y && dest.curr.x < qrand.curr.x)
 		{
-			net_field.magx += -500*dist_dest*dist_dest;
+			net_field.magx += -1*dist_dest*dist_dest;
 		}
-		cout<<"Net field: "<<net_field.magx<<" "<<net_field.magy<<endl;
+		//cout<<"Net field: "<<net_field.magx<<" "<<net_field.magy<<endl;
 		net_field.slope = abs(net_field.magy/net_field.magx);
 		if(net_field.magx > 0 && net_field.magy > 0)
 		{
