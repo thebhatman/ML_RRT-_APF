@@ -172,7 +172,6 @@ int main()
 						POT.y += temp.y;
 					}					
 				}
-				
 				POT.x /= obs_number;
 				POT.y /= obs_number;
 				float optimal_slope = slope(path_points[iter], path_points[iter+1]);
