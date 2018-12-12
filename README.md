@@ -20,7 +20,7 @@ Using the above data and using the area of the obstacle and the centre of the ob
 The results turned out pretty well and the tree converged well towards the target . 
 
 <p align="center">
-  <img src="https://github.com/Snehal-Reddy/ML_RRT-_APF/blob/master/images/Tree_with_ML.png"/>
+  <img src="https://github.com/Snehal-Reddy/ML_RRT-_APF/blob/master/images/Tree_with_ML.png" width = "200" height = "200">
 </p>
 
 
