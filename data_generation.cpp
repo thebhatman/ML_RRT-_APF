@@ -90,11 +90,11 @@ int main()
 		}
     int a[3] = {0,1,2};
     srand(time(0));
-    int number = 10000;
+    int number = 100000;
     //int num[10000];
     ofstream myfile1;
     myfile1.open("data/number.txt");
-
+    
     ofstream myfile2;
     myfile2.open("data/obst.txt");
     while(number--)

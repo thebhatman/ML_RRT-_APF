@@ -2,24 +2,24 @@ import re
 import numpy as np
 import sys
 
-def shortest_dist(filename):
+def potential(filename):
 	distance = open(filename,"r")
-	sd = []
+	pot = []
 	for line in distance:
 		lineSplit=line.split(" ")
-		sd.append(lineSplit[0])
+		pot.append(lineSplit[0])
 
-	return sd 
+	return pot
 
-def number(filename):
-	num = open(filename,"r")
-	number = []
-	for line in num:
-		lineSplit=line.split(" ")
-		number.append(lineSplit[0])
-	return number
+# def number(filename):
+# 	num = open(filename,"r")
+# 	number = []
+# 	for line in num:
+# 		lineSplit=line.split(" ")
+# 		number.append(lineSplit[0])
+# 	return number
 
-def obstacles(filename):
+def features(filename):
 	obs = open(filename,"r")
 	x_centre = []
 	y_centre = []
@@ -31,6 +31,3 @@ def obstacles(filename):
 		area.append(lineSplit[2])
 	return x_centre,y_centre,area
 	
-
-preprocess.py
-Displaying training.py.

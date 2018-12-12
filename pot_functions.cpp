@@ -11,6 +11,7 @@
 
 #define ROWS 100
 #define COLS 100
+#define DATASET 100000
 using namespace cv;
 using namespace std;
 
@@ -18,6 +19,11 @@ typedef struct point
 {
 	int x,y;
 }point;
+
+typedef struct
+{
+	float x,y;
+}POTENTIAL;
 
 float dist(point p1, point p2)
 {
@@ -30,6 +36,17 @@ float slope(point p1, point p2)
 	return ((p1.y - p2.y)*1.0)/(p1.x - p2.x);
 }
 
+POTENTIAL where_is_my_pot(point obs, point on_path)
+{
+	POTENTIAL pot;
+	float mag = 1/pow(dist(obs,on_path),2);
+	float angle = atan2(on_path.y - obs.y, on_path.x - obs.x);
+	pot.x = mag*cos(angle);
+	pot.y = mag*sin(angle);
+	//cout<<pot.x<<" ----- "<<pot.y<<endl;
+	return pot;
+}
+
 
 int main()
 {
@@ -40,10 +57,25 @@ int main()
 	ifstream path_file("data/output.txt");
 	string path_line;
 	FILE *fp;
+	
+    int number = DATASET;
+    string s = "dataset/";
+    string s1 = "img";
+    string s3 = ".jpg";
+    Mat img;
 	fp = fopen("data/features.txt", "r");
 	while(getline(path_file, path_line))
 	{
+
 	//getline(path_file,path_line);
+		stringstream ss;
+		ss<<(DATASET-number);
+
+		number--;
+		string s2 = ss.str();
+		//cout<<s2<<endl;
+		img = imread(s+s1+s2+s3,0);
+		//cout<<"ros "<<img.rows<<" "<<img.cols<<endl;
 		i = 2;
 		//cout<<path_line[3]<<endl;
 		vector<point> path_points;
@@ -102,38 +134,69 @@ int main()
 			{
 				i = i+9;
 			}
+			//img.at<uchar>(temp.x, temp.y) = 100;
 			//cout<<path_line[i]<<endl;
 			path_points.push_back(temp);	
 
 		}
-		point obs_loc;
-		int area;
-		float potential=0;
-		fscanf(fp,"%d%d%d",&obs_loc.x,&obs_loc.y,&area);
-		for(k = 0; k < path_points.size()-1; k++)
+		/*namedWindow("image",WINDOW_NORMAL);
+		imshow("image", img);
+		while(1)
 		{
-			float dest_dist = dist(path_points[k], dest);
-			float obs_dist = dist(path_points[k], obs_loc);
-			float optimal_slope = slope(path_points[k],path_points[k+1]);
-			float dest_angle = atan2(path_points[k].y-dest.y,path_points[k].x-dest.x);
-			float obs_angle = atan2(path_points[k].y-obs_loc.y,path_points[k].x-obs_loc.x);
-
-			//cout<<"obs_loc = "<<obs_loc.x<<" "<<obs_loc.y<<endl;
-			//cout<<"path_points = "<<path_points[k].x<<" "<<path_points[k].y<<endl;
-			//cout<<"dest_angle = "<<dest_angle*180/3.14159265<<endl;
-			//cout<<"obs_angle = "<<obs_angle*180/3.14159265<<endl;
-			if(optimal_slope*cos(obs_angle) == sin(obs_angle))
-				potential += INT_MAX;
+			int temp = waitKey(10);
+			if(temp == 27) break;
+		}*/
+		
+		int iter;
+		float FIELD = 0;
+		//cout<<path_points.size()<<endl;
+		for(iter=0; iter<path_points.size()-1; iter++)
+		{
+			int m,n;
+			POTENTIAL POT;
+			POT.x = 0;
+			POT.y = 0;
+			int obs_number = 0;
 			
-			else potential += pow(dest_dist,2)*pow(obs_dist,2)*((optimal_slope*cos(dest_angle))-sin(dest_angle))/((optimal_slope*cos(obs_angle)-sin(obs_angle)));
-
+			for(m=0; m<ROWS; m++)
+				for(n=0; n<COLS; n++)
+				{
+					if((int)img.at<uchar>(m,n) >= 150)
+					{
+						obs_number++;
+						point obs;
+						obs.x = m;
+						obs.y = n;
+						POTENTIAL temp = where_is_my_pot(obs, path_points[iter]);
+						POT.x += temp.x;
+						POT.y += temp.y;
+					}					
+				}
+				
+				POT.x /= obs_number;
+				POT.y /= obs_number;
+				float optimal_slope = slope(path_points[iter], path_points[iter+1]);
+				POTENTIAL dest_POT;
+				//cout<<POT.x<<"------"<<POT.y<<endl;
+				float mag = pow(dist(dest,path_points[iter]),2);
+				float angle = atan2(dest.y - path_points[iter].y, dest.x - path_points[iter].x);
+				dest_POT.x = mag*cos(angle);
+				dest_POT.y = mag*sin(angle);
+				//cout<<"====>"<<dest_POT.y<<endl;
+				//cout<<"BOOO "<<(optimal_slope*dest_POT.x)<<endl;
+				if(optimal_slope*POT.x == POT.y)
+					FIELD += INT_MAX;
+				else
+				FIELD += (dest_POT.y-(optimal_slope*dest_POT.x))/((optimal_slope*POT.x)-POT.y);
+			//cout<<"Num = "<<(dest_POT.y-(optimal_slope*dest_POT.x));
+			//cout<<"Denom = "<<((optimal_slope*POT.x)-POT.y);
+			//cout<<"testing "<<FIELD<<endl;
 		}
-		potential /= path_points.size();
-		cout<<potential<<endl;
-		//cout<<"obs "<<obs_loc.x<<" "<<obs_loc.y<<endl;
 
-		//cout<<endl;
+		FIELD /= path_points.size();
+		cout<<FIELD<<endl;
 	}
+	
 	return 0;
 
 }
