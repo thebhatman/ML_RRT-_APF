@@ -65,6 +65,29 @@ Mat triangle(Mat a , int j , int k , int r )
 
 int main()
 {
+	int a[3] = {0,1,2};
+	srand(time(0));
+	int number = 1;
+	while(number--)
+	{
+		int obs_number = 10+ rand()%8;
+		Mat img(300,300,CV_8UC1,Scalar(0));
+		while(obs_number--)
+		{
+			int shape = rand()%3;
+			if(shape == 0)
+			{
+				img = circle(img,rand()%img.rows,rand()%img.cols,12+rand()%10);
+			}
+			else if(shape == 1)
+			{
+			     img = square(img,rand()%img.rows,rand()%img.cols,12+rand()%10);
+		  }
+			else if(shape == 2)
+			{
+				img = triangle(img,rand()%img.rows,rand()%img.cols,12+rand()%10);
+			}
+		}
     int a[3] = {0,1,2};
     srand(time(0));
     int number = 100000;
@@ -96,6 +119,7 @@ int main()
             myfile2 << x << " " << y << " " << area << endl;
             
         }
+>>>>>>> d81d8f208783fb88246c37d3e7c75864be70d109
         //std::string s = std::to_string(number);
         stringstream ss;
         ss<<number;
