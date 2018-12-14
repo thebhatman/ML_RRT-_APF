@@ -89,7 +89,7 @@ Mat bin(Mat a)
 
 int main()
 {
-	float learning_paramter =  6395050.0915676
+	float learning_paramter =  6395050.0915676;
 	//Mat a(500, 500, CV_8UC1, Scalar(0));
 	Mat a = imread("dataset/img99999.jpg",0);
 	a=bin(a);
