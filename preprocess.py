@@ -2,6 +2,9 @@ import re
 import numpy as np
 import sys
 
+DATA = 100000
+F_no = 36
+
 def potential(filename):
 	distance = open(filename,"r")
 	pot = []
@@ -36,7 +39,7 @@ def all_circles(filename):
 	num  = 0
 	obs = open(filename,"r")
 	k = 0
-	array = np.zeros(shape = (100000, 25))
+	array = np.zeros(shape = (DATA, F_no))
 	i =  0
 	line = 0
 	j = 0
@@ -49,8 +52,8 @@ def all_circles(filename):
 		#for j in range(24):
 		if (k >= int(number[num])):
 			#print("j=",j)
-			while(j < 24):
-				array[num][j] = 99
+			while(j < F_no):
+				array[num][j] = 0
 				j += 1
 			num += 1
 			j = 0
@@ -59,18 +62,17 @@ def all_circles(filename):
 		lineSplit = line.split(" ")
 		array[num][j] = lineSplit[0]
 		array[num][j+1] = lineSplit[1]
-		j += 2
+		array[num][j+2] = lineSplit[2]
+		j += 3
 		k += 1
-		if(num == 99999):
-			while(j < 24):
-				array[num][j] = 99
+		if(num == DATA-1):
+			while(j < F_no):
+				array[num][j] = 0
 				j += 1
 			break
 		#print(k)
 		#continue
-	area = features("data/feature.txt")
-	for i in range(100000):
-		array[i][24] = area[i]
+	
 	return array
 		
 
