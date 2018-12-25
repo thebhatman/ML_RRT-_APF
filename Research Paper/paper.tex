@@ -188,8 +188,20 @@ $\sum_{i=1}^{n}V_{i}=k\sum_{i=1}^{n}\frac{\text{Q_{i}}}{\text{r_{i}}} + \text{k^
 
 \hspace{-5mm}Here $k$ and $k^\prime$ is a proportionality constant due to obstacles and destination respectively, and $n$ is the total number of charges. 
 
-Now how much the tree should grow towards the destination relative to growing away from the obstacles, dependant on $k$ and $k^\prime$ is a very sensitive parameter and has serious implications.
+Now how much the tree should grow towards the destination relative to growing away from the obstacles, dependant on $k$ and $k^\prime$ is a very sensitive parameter and has serious implications(Fig 2 and Fig 3).
 \vspace{3mm}
+\begin{figure}
+\begin{center}
+\includegraphics[scale=1.5]{tree.png}
+    \caption{ The tree growth of RRT-Star with APF for a non-ideal value of Potential Function. It is evident that repulsion from the obstacle is not significant enough and that there is unnecessary branching of the tree. The final path is not a good approximation of the shortest path.(Fig 4)} \label{fig1}
+\end{center}
+\end{figure}
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.65]{stuckyy.png}
+    \caption{ An illustration of a case where the tree gets stuck in a local minimum, due to highly unsuitable value of Potential Function.}\label{fig1}
+\end{center}
+\end{figure}
 
 \begin{figure}
 \begin{center}
@@ -199,7 +211,7 @@ Now how much the tree should grow towards the destination relative to growing aw
 \end{figure}
 
 \subsection{Ideal Path and Potential Constants:}
-To find the ideal constants of potential field , we first found the ideal path by using BFS and Dijkstra and then reverse engineered our way to find the ideal potential functions for over 100,000 images. An example is shown in the figure above.
+To find the ideal constants of potential field , we first found the ideal path by using BFS and Dijkstra and then reverse engineered our way to find the ideal potential functions for over 100,000 images. An example is shown in the figure above (Fig 5).
 
 
 \subsection{Training:}
@@ -211,19 +223,10 @@ The position of the obstacle is an important determinant of the RRT* Tree. So is
     \caption{ The tree growth and piloted sampling of the nodes in RRT-Star with APF for the trained value of Potential Function. The tree converges directly to the destination and provides a very good approximation of the shortest path.} \label{fig1}
 \end{center}
 \end{figure}
-\begin{figure}
-\begin{center}
-\includegraphics[scale=1.5]{tree.png}
-    \caption{ The tree growth of RRT-Star with APF for a non-ideal value of Potential Function. It is evident that repulsion from the obstacle is not significant enough and that there is unnecessary branching of the tree. The final path is not a good approximation of the shortest path.} \label{fig1}
-\end{center}
-\end{figure}
-\begin{figure}
-\begin{center}
-\includegraphics[scale=0.65]{stuck.png}
-    \caption{ An illustration of a case where the tree gets stuck in a local minimum, due to highly unsuitable value of Potential Function.}\label{fig1}
-\end{center}
-\end{figure}
 
+\section{\centering{Comaparison}}
+\subsection{Time of convergence:}
+\subsection{Width of the tree:}
 % \begin{figure}
 % We conducted an experiment based on tree generation time given a set of obstacles. The experimental setup included ROS based communication nodes and a GUI based interactive platform for setting up the environment. This was performed on Linux 4.4.0-127-generic with 8 GiB memory and 2.3 GHz x 8 CPU.
 % % \vspace{-1mm}
