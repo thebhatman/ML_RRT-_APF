@@ -65,42 +65,19 @@ Mat triangle(Mat a , int j , int k , int r )
 
 int main()
 {
-	int a[3] = {0,1,2};
-	srand(time(0));
-	int number = 1;
-	while(number--)
-	{
-		int obs_number = 10+ rand()%8;
-		Mat img(300,300,CV_8UC1,Scalar(0));
-		while(obs_number--)
-		{
-			int shape = rand()%3;
-			if(shape == 0)
-			{
-				img = circle(img,rand()%img.rows,rand()%img.cols,12+rand()%10);
-			}
-			else if(shape == 1)
-			{
-			     img = square(img,rand()%img.rows,rand()%img.cols,12+rand()%10);
-		  }
-			else if(shape == 2)
-			{
-				img = triangle(img,rand()%img.rows,rand()%img.cols,12+rand()%10);
-			}
-		}
     int a[3] = {0,1,2};
     srand(time(0));
     int number = 100000;
     //int num[10000];
     ofstream myfile1;
     myfile1.open("data/number.txt");
-    
+    Mat img(300,300,CV_8UC1,Scalar(0));
     ofstream myfile2;
     myfile2.open("data/obst.txt");
     while(number--)
     {
         int obs_number = 4+ rand()%8;
-        Mat img(100,100,CV_8UC1,Scalar(0));
+        
         // vector<int> x(obs_number);
         // vector<int> y(obs_number);
         // vector<float> area(obs_number);
@@ -119,7 +96,6 @@ int main()
             myfile2 << x << " " << y << " " << area << endl;
             
         }
->>>>>>> d81d8f208783fb88246c37d3e7c75864be70d109
         //std::string s = std::to_string(number);
         stringstream ss;
         ss<<number;
@@ -129,6 +105,15 @@ int main()
         string s3 = ".jpg";
         //string s4 = "1";
         imwrite(s+s1+s2+s3,img); 
+    }
+    if(number%10 != 0)
+    {
+        int x = rand()%(img.rows);
+        //int y = rand()%(img.cols);
+        int r = 5+rand()%10;
+        img = circle(img,x,x,r);
+        float area = 3.14*r*r;
+        myfile2 << x << " " << x << " " << area << endl;
     }
     return 0;
 }
