@@ -71,12 +71,15 @@ int main()
     //int num[10000];
     ofstream myfile1;
     myfile1.open("data/number.txt");
-    Mat img(300,300,CV_8UC1,Scalar(0));
+    Mat img1(300,300,CV_8UC1,Scalar(0));
+    Mat img;
+    namedWindow("Image", WINDOW_NORMAL);
     ofstream myfile2;
     myfile2.open("data/obst.txt");
     while(number--)
     {
-        int obs_number = 4+ rand()%8;
+        img = img1.clone();
+        int obs_number = 12+ rand()%8;
         
         // vector<int> x(obs_number);
         // vector<int> y(obs_number);
@@ -90,7 +93,7 @@ int main()
 
             int x = rand()%(img.rows);
             int y = rand()%(img.cols);
-            int r = 5+rand()%10;
+            int r = 15+rand()%10;
             img = circle(img,x,y,r);
             float area = 3.14*r*r;
             myfile2 << x << " " << y << " " << area << endl;
@@ -104,13 +107,20 @@ int main()
         string s2 = ss.str();
         string s3 = ".jpg";
         //string s4 = "1";
+        // imshow("Image", img);
+        // while(1)
+        // {
+        //     int flag = waitKey(0);
+        //     if(flag == 27)
+        //         break;
+        // }
         imwrite(s+s1+s2+s3,img); 
     }
     if(number%10 != 0)
     {
         int x = rand()%(img.rows);
         //int y = rand()%(img.cols);
-        int r = 5+rand()%10;
+        int r = 15+rand()%10;
         img = circle(img,x,x,r);
         float area = 3.14*r*r;
         myfile2 << x << " " << x << " " << area << endl;
