@@ -91,7 +91,7 @@ int main()
 {
 	float learning_paramter =  60149280.05859824;
 	//Mat a(500, 500, CV_8UC1, Scalar(0));
-	Mat a = imread("dataset/img99999.jpg",0);
+	Mat a = imread("dataset/img0.jpg",0);
 	a=bin(a);
 
 	srand(time(0));
@@ -101,7 +101,22 @@ int main()
 	{
 		pot_field[i] = new potential[a.cols];
 	}
-	
+	obs_centre hurdle;
+	for(i = 0; i < a.rows; i++)
+	{
+		for(j = 0; j < a.cols; j++)
+		{
+			if(a.at<uchar>(i,j) > 200)
+			{
+				hurdle.i = i;
+				hurdle.j = j;
+				obstacles.push_back(hurdle);
+			}
+		}
+	}
+	Mat c = a.clone();
+	//Mat kernel = Mat::ones(5,5, CV_8UC1);
+	//dilate(c,c,kernel);
 	Mat b = a.clone();
 	node source, dest;
 	cout<<"Enter the co-ordinates of the source"<<endl;
@@ -371,8 +386,8 @@ int main()
 			for(j = 0; j < d1; j++)
 			{
 				node q;
-				q.curr.x = (j*qrand.curr.x + (d1-j)*qnear.curr.x)/d1;
-				q.curr.y = (j*qrand.curr.y + (d1-j)*qnear.curr.y)/d1;
+				q.curr.x = (j*qnew.curr.x + (d1-j)*qnew.neighbours[i].curr.x)/d1;
+				q.curr.y = (j*qnew.curr.y + (d1-j)*qnew.neighbours[i].curr.y)/d1;
 				int e = q.curr.y;
 				int f = q.curr.x;
 				if(a.at<uchar>(e,f) > 220) flag = 1;
