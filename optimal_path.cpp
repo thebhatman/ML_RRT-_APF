@@ -51,14 +51,14 @@ void dijkstra(vector<Point2d> all_points, Mat img, int *visited ,vector<int> &ba
 	while(1)
 	{
 		//cout<<"Dijkstra running..."<<endl;
+		curr_node_index = index_of_best_node(visited, all_points, dist, img);
 		if(curr_node_index == end_index) break; 
 		if(curr_node_index == -1) continue;
-		curr_node_index = index_of_best_node(visited, all_points, dist, img);
 		//if(visited[curr_node_index] == 1) continue;
 		//cout<<"curr_node_index = "<<curr_node_index<<endl;
 		//cout<<"curr_node "<<distinct_corners[curr_node_index].x<<" "<<distinct_corners[curr_node_index].y<<endl;
 		//cout<<path_matrix[curr_node_index][0]<<endl;
-		if(dist[curr_node_index] + 1 < dist[curr_node_index + 1] && img.at<uchar>(all_points[curr_node_index+1].y, all_points[curr_node_index+1].x) < 127)
+		if(dist[curr_node_index] + 1 < dist[curr_node_index + 1] && img.at<uchar>(all_points[curr_node_index+1].y, all_points[curr_node_index+1].x) < 127 )
 		{
 			dist[curr_node_index+1] = dist[curr_node_index] + 1;
 			baap_ka_index[curr_node_index+1] = curr_node_index;
@@ -73,7 +73,7 @@ void dijkstra(vector<Point2d> all_points, Mat img, int *visited ,vector<int> &ba
 			dist[curr_node_index-img.cols] = dist[curr_node_index] + 1;
 			baap_ka_index[curr_node_index-img.cols] = curr_node_index;
 		}
-		if(dist[curr_node_index] + 1 < dist[curr_node_index + img.cols] && img.at<uchar>(all_points[curr_node_index+img.cols].y, all_points[curr_node_index+img.cols].x) <127)
+		if(dist[curr_node_index] + 1 < dist[curr_node_index + img.cols] && img.at<uchar>(all_points[curr_node_index+img.cols].y, all_points[curr_node_index+img.cols].x) <127 )
 		{
 			dist[curr_node_index+img.cols] = dist[curr_node_index] + 1;
 			baap_ka_index[curr_node_index+img.cols] = curr_node_index;

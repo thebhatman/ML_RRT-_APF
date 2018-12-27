@@ -55,7 +55,7 @@ int main()
         number--;
         //cout << 100000-number << " " << num << endl;
         if (num==0)
-        	myfile << 50 << " " << 50 << " " << 1 << endl;
+        	myfile << 0 << " " << 0 << " " << 1 << endl;
         else
         	myfile << x/num << " " << y/num << " " <<num << endl;
     }
