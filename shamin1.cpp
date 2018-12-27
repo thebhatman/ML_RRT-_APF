@@ -197,20 +197,19 @@ int main()
 				if(dist < minimum) {minimum = dist; q_nearest = tree[i];}
 			}
 			//printf("q_nearest found\n");
+			struct node q_new;
+			q_new.point = step(q_nearest.point, q_rand.point, step_size);
 
-			int obs, section;
-			for(section=1, obs=0; section<minimum; section++)
+			float obs, section;
+			for(section=d(q_new.point, q_nearest.point), obs=0; section>0; section--)
 			{	
 				Point2i check;
-				check = step(q_rand.point, q_nearest.point, section);
+				check = step(q_nearest.point, q_new.point, section);
 				if(a.at<uchar>(check.y, check.x) == 255) {obs=1; break;}
 			}
 
 			if(obs) continue;
 			//printf("no obstacle in between\n");
-
-			struct node q_new;
-			q_new.point = step(q_nearest.point, q_rand.point, step_size);
 			
 			q_new.dad.point = q_nearest.point;
 			q_new.dad.index = q_nearest.index;
@@ -347,7 +346,7 @@ int main()
 	imshow("Final", path);
 	while(waitKey(0)!=27){}
 
-	printf("Done\n");
+	//printf("Done\n");
 
 	return 0;
 }
