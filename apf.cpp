@@ -4,12 +4,15 @@
 #include "opencv2/core/core.hpp"
 #include <stdio.h>
 #include <stdlib.h>
+//#include <chrono> 
+#include <ctime>
 #include <math.h>
 #include <vector>
 #include <queue>
 
 using namespace cv;
 using namespace std;
+//using namespace std::chrono;
 float max_step_size = 2.5;
 float neighbour_hood = 10;
 
@@ -89,12 +92,15 @@ Mat bin(Mat a)
 
 int main()
 {
-	float learning_paramter =  60149280.05859824;
+	float learning_paramter =  1.05854e+10 ;
 	//Mat a(500, 500, CV_8UC1, Scalar(0));
 	Mat a = imread("dataset/img0.jpg",0);
 	a=bin(a);
 
 	srand(time(0));
+	//auto start = std::chrono::high_resolution_clock::now();
+	time_t start;
+	time(&start);
 	int i = 0,j = 0,k = 0, curr_tree_size = 0, m, n, s;
 	potential **pot_field = new potential*[a.rows];
 	for(i = 0; i < a.rows; i++)
@@ -409,8 +415,8 @@ int main()
 
 		}
 
-		imshow("star_apf",a);
-		waitKey(2);
+		//imshow("star_apf",a);
+		//waitKey(2);
 		if(dist(qnew, dest) <= 2*max_step_size)
 		{
 			dest.mommy.curr.x = qnew.curr.x; dest.mommy.curr.y = qnew.curr.y;
@@ -423,8 +429,8 @@ int main()
 		}
 
 	}
-    imshow("star_apf",a);
-    namedWindow("Final_apf", WINDOW_NORMAL);
+    //imshow("star_apf",a);
+    //namedWindow("Final_apf", WINDOW_NORMAL);
 	
 	k = srctree.size() - 1;
 	while(k !=0 )
@@ -434,7 +440,11 @@ int main()
 		line(b, temp3.curr, srctree[k].mommy.curr, Scalar(255), 1 ,8, 0);
 		k = srctree[k].mommy.index;
 	}
-	imshow("Final_apf", b);
-	while(waitKey(0)!=27){}
+	//auto stop = std::chrono::high_resolution_clock::now();
+	time_t stop;
+	time(&stop);
+	//imshow("Final_apf", b);
+	//while(waitKey(0)!=27){}
+	cout << stop - start << endl;
 	return 0;
 }
