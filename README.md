@@ -32,6 +32,10 @@ The results turned out pretty well and the tree converged well towards the targe
   <img src="https://github.com/Snehal-Reddy/ML_RRT-_APF/blob/master/images/Tree_with_ML1.png" width = "200" height = "200">
 </p>
 
+### Aproach 2 ###
+
+We use OMPL's inbuilt RRT-X to get the ideal path. 
+We then build a neural network which learns by comparing its path with the RRT-X one without actually reverse engineering ideal potential constants from the ideal path.
 Research Paper is currently under development.
 
 
