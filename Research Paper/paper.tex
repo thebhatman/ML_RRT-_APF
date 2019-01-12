@@ -211,11 +211,11 @@ Now how much the tree should grow towards the destination relative to growing aw
 \end{figure}
 
 \subsection{Ideal Path and Potential Constants:}
-To find the ideal constants of potential field , we first found the ideal path by using BFS and Dijkstra and then reverse engineered our way to find the ideal potential functions for over 100,000 images. An example is shown in the figure above (Fig 5).
+To find the ideal constants of potential field , we first found the ideal path by using BFS and Dijkstra. These ideal paths were then made use of in the neural networks later on. An example is shown in the figure above (Fig 5).
 
 
 \subsection{Training:}
-The position of the obstacle is an important determinant of the RRT* Tree. So is the area of the obstacle. So we took the centres of the each obstacle blob and the total area of the obstacles as the features and trained it with the potential using Random Forest Regressor model on around 100,000 images randomly generated images. We then used the potential funtion thus predicted to run an RRT* APF tree and an example is shown in Fig. 3.
+The position of the obstacle is an important determinant of the RRT* Tree. So is the area of the obstacle. So we took the centres of the each obstacle blob and the total area of the obstacles as the features of the neural network. We designed the cost function by comparing the predicted path after an epoch and the ideal path. Using this we predicted the potential function. We then used the potential function thus predicted to run an RRT* APF tree and an example is shown in Fig. 3.
 \vspace{10mm}
 \begin{figure}
 \begin{center}
