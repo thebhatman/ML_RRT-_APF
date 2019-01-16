@@ -138,14 +138,14 @@ void print_path(graph_node parent[ROWS][COLS], graph_node start, graph_node end)
 	if((start.x == end.x) && (start.y == end.y))
 	{
 		img.at<uchar>(end.x,end.y)=160;
-		printf(" (%d,%d) ",start.x,start.y);
+		printf(" ( %d , %d ) ",start.x,start.y);
 	}
 	else if(parent[end.x][end.y].x==-1 && parent[end.x][end.y].y==-1)
 		printf("\nNo path from (%d,%d) to (%d,%d) exists",start.x,start.y,end.x,end.y);
 	else
 	{
 		print_path(parent,start,parent[end.x][end.y]);
-		printf(" (%d,%d) ",end.x,end.y);
+		printf(" ( %d , %d ) ",end.x,end.y);
 		img.at<uchar>(end.x,end.y)=160;
 	}
 	
@@ -153,22 +153,43 @@ void print_path(graph_node parent[ROWS][COLS], graph_node start, graph_node end)
 
 void approx_path(graph_node parent[ROWS][COLS], graph_node start, graph_node end)
 {
-	int	approx_step = 5;
+	int required_path_points = 50;
+	int existing_path_points=0;
+	graph_node temp=end;
+	while(parent[temp.x][temp.y].x!=-1 && parent[temp.x][temp.y].y!=-1)
+	{
+		temp = parent[temp.x][temp.y];
+		existing_path_points++;
+	}
+	existing_path_points++;	
+	//cout<<existing_path_points<<endl<<required_path_points<<endl;
+	int	approx_step;
 	graph_node approx_parent[ROWS][COLS];
 	graph_node u = end, v = end;
+	int count=0;
+	required_path_points+=2;
 	while(parent[v.x][v.y].x != -1 && parent[v.x][v.y].y != -1)
 	{
+
+		required_path_points--;
+		if((existing_path_points-1)%(required_path_points-1)==0)
+			approx_step = (existing_path_points-1)/(required_path_points-1);
+		else
+			approx_step = (existing_path_points-1)/(required_path_points-1)+1;
+		//cout<<approx_step<<endl;
 		int i;
 		for(i=0; i<approx_step; i++)
 		{
 			if(parent[v.x][v.y].x == -1 || parent[v.x][v.y].y == -1)
 				break;
 			v = parent[v.x][v.y];
+			existing_path_points--;
 		}
-
 		approx_parent[u.x][u.y] = v;
+		count++;
 		u = v;
 	}
+	//cout<<count<<endl;
 	print_path(approx_parent,start,end);
 }
 
@@ -196,7 +217,7 @@ int main()
 	end.x = ROWS-1;
 	end.y = COLS-1;
 	int dist[DATASET];
-	int number = DATASET;
+	int number = 0;
 	//int number = 5468;
 	/*int temp = BFS(parent,start);
 	approx_path(parent,start,end);
@@ -208,7 +229,7 @@ int main()
 		if(temp == 27) break;
 	}
 	return 0;*/
-	while(number>0)
+	while(number<DATASET)
 	{
 		graph_node parent[ROWS][COLS];
 		stringstream ss;
@@ -220,10 +241,10 @@ int main()
         string s3 = ".jpg";
         img = imread(s+s1+s2+s3,0);	
         //cout << img.rows << endl;	
-		dist[DATASET-number]=BFS(parent,start);
+		dist[number]=BFS(parent,start);
 		//cout << dist[ROWS*COLS-number] << endl;
 		approx_path(parent,start,end);
-		number--;
+		number++;
 		printf("\n");
 	}
 	// print_path(parent,start,end);
