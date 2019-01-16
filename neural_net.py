@@ -24,7 +24,12 @@ def loss(A_L):
 	file_arg = "apf.cpp "+A_L
 	subprocess.call(["g++",file_arg])
 	subprocess.call("./a.out")
-	#catch and use return values
+	text = open('file.txt',"r")
+    array = []
+    for line in text:
+    	lineSplit=line.split(" ")
+    	for word in lineSplit:
+    		array.append(int(word))
 	return lossfunction(array)
 
 def lossfunction(epoch_array):

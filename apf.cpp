@@ -448,3 +448,6 @@ int main(int argc, char** argv)
 	cout << stop - start << endl;
 	return 0;
 }
+
+// us this
+// std::ofstream("test.txt", std::ios::out).close();
