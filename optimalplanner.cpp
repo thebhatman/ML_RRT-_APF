@@ -6,8 +6,8 @@
 #include <stdlib.h>
 using namespace std;
 using namespace cv;
-#define ROWS 100
-#define COLS 100
+#define ROWS 300
+#define COLS 300
 #define DATASET 100000
 Mat img;
 struct graph_node
@@ -197,7 +197,7 @@ int main()
 	end.y = COLS-1;
 	int dist[DATASET];
 	int number = DATASET;
-	
+	//int number = 5468;
 	/*int temp = BFS(parent,start);
 	approx_path(parent,start,end);
 	namedWindow("Final Path",WINDOW_NORMAL);
@@ -212,7 +212,8 @@ int main()
 	{
 		graph_node parent[ROWS][COLS];
 		stringstream ss;
-        ss<<(DATASET-number);
+        //ss<<(DATASET-number);
+        ss<<number;
         string s = "dataset/";
         string s1 = "img";
         string s2 = ss.str();

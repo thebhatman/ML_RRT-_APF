@@ -4,12 +4,15 @@
 #include "opencv2/core/core.hpp"
 #include <stdio.h>
 #include <stdlib.h>
+//#include <chrono> 
+#include <ctime>
 #include <math.h>
 #include <vector>
 #include <queue>
 
 using namespace cv;
 using namespace std;
+//using namespace std::chrono;
 float max_step_size = 2.5;
 float neighbour_hood = 10;
 
@@ -89,19 +92,37 @@ Mat bin(Mat a)
 
 int main()
 {
-	float learning_paramter =  6395050.0915676;
+	float learning_paramter =  1.05854e+10 ;
 	//Mat a(500, 500, CV_8UC1, Scalar(0));
-	Mat a = imread("dataset/img99999.jpg",0);
+	Mat a = imread("dataset/img0.jpg",0);
 	a=bin(a);
 
 	srand(time(0));
+	//auto start = std::chrono::high_resolution_clock::now();
+	time_t start;
+	time(&start);
 	int i = 0,j = 0,k = 0, curr_tree_size = 0, m, n, s;
 	potential **pot_field = new potential*[a.rows];
 	for(i = 0; i < a.rows; i++)
 	{
 		pot_field[i] = new potential[a.cols];
 	}
-	
+	obs_centre hurdle;
+	for(i = 0; i < a.rows; i++)
+	{
+		for(j = 0; j < a.cols; j++)
+		{
+			if(a.at<uchar>(i,j) > 200)
+			{
+				hurdle.i = i;
+				hurdle.j = j;
+				obstacles.push_back(hurdle);
+			}
+		}
+	}
+	Mat c = a.clone();
+	//Mat kernel = Mat::ones(5,5, CV_8UC1);
+	//dilate(c,c,kernel);
 	Mat b = a.clone();
 	node source, dest;
 	cout<<"Enter the co-ordinates of the source"<<endl;
@@ -161,9 +182,6 @@ int main()
 
 		qrand.curr.x = rand()%a.cols;
 		qrand.curr.y = rand()%a.rows;
-		//float adist = dist(qnear, qrand);
-		//qrand.curr.x = (max_step_size*qrand.curr.x + (adist-max_step_size)*qnear.curr.x)/adist;
-		//qrand.curr.y = (max_step_size*qrand.curr.y + (adist-max_step_size)*qnear.curr.y)/adist;
 		mindist = 9999999;
 		int x_co, y_co;
 		x_co = qrand.curr.x; y_co = qrand.curr.y;
@@ -288,13 +306,14 @@ int main()
 			qrand.curr.x = qrand.curr.x - dist(qrand, dest)*cos(abs(atan(net_field.slope)));
 			qrand.curr.y = qrand.curr.y - dist(qrand, dest)*sin(abs(atan(net_field.slope)));
 		}
-		d = distance(qnear.curr.x, qnear.curr.y, qrand.curr.x, qrand.curr.y);
+		
 		int flag2 = 0;
 		if(!isValid(qrand.curr.x, qrand.curr.y, a))
 		{
 			qrand.curr.x = x_co;
 			qrand.curr.y = y_co;
-		}	
+		}
+
 		for(i = 0; i < curr_tree_size; i++)
 		{
 			d = dist(srctree[i], qrand);
@@ -307,6 +326,7 @@ int main()
 				mindist = d;
 			}
 		}
+		d = distance(qnear.curr.x, qnear.curr.y, qrand.curr.x, qrand.curr.y);
 		if(d > max_step_size)
 		{
 			qnew.curr.x = (max_step_size*qrand.curr.x + (d - max_step_size)*qnear.curr.x)/d;
@@ -316,7 +336,7 @@ int main()
 		{
 			qnew = qrand;
 		}
-		d = dist(qnear, qrand);
+		d = dist(qnear, qnew);
 		for(i = 0; i < d; i++)
 		{
 			node q;
@@ -326,7 +346,6 @@ int main()
 			int f = q.curr.x;
 			if(a.at<uchar>(e,f) > 220) goto here;
 		}
-		
 		
 		for(i = 0; i < curr_tree_size; i++)
 		{
@@ -373,8 +392,8 @@ int main()
 			for(j = 0; j < d1; j++)
 			{
 				node q;
-				q.curr.x = (j*qrand.curr.x + (d1-j)*qnear.curr.x)/d1;
-				q.curr.y = (j*qrand.curr.y + (d1-j)*qnear.curr.y)/d1;
+				q.curr.x = (j*qnew.curr.x + (d1-j)*qnew.neighbours[i].curr.x)/d1;
+				q.curr.y = (j*qnew.curr.y + (d1-j)*qnew.neighbours[i].curr.y)/d1;
 				int e = q.curr.y;
 				int f = q.curr.x;
 				if(a.at<uchar>(e,f) > 220) flag = 1;
@@ -396,8 +415,8 @@ int main()
 
 		}
 
-		imshow("star_apf",a);
-		waitKey(2);
+		//imshow("star_apf",a);
+		//waitKey(2);
 		if(dist(qnew, dest) <= 2*max_step_size)
 		{
 			dest.mommy.curr.x = qnew.curr.x; dest.mommy.curr.y = qnew.curr.y;
@@ -410,8 +429,8 @@ int main()
 		}
 
 	}
-    imshow("star_apf",a);
-    namedWindow("Final_apf", WINDOW_NORMAL);
+    //imshow("star_apf",a);
+    //namedWindow("Final_apf", WINDOW_NORMAL);
 	
 	k = srctree.size() - 1;
 	while(k !=0 )
@@ -421,7 +440,11 @@ int main()
 		line(b, temp3.curr, srctree[k].mommy.curr, Scalar(255), 1 ,8, 0);
 		k = srctree[k].mommy.index;
 	}
-	imshow("Final_apf", b);
-	while(waitKey(0)!=27){}
+	//auto stop = std::chrono::high_resolution_clock::now();
+	time_t stop;
+	time(&stop);
+	//imshow("Final_apf", b);
+	//while(waitKey(0)!=27){}
+	cout << stop - start << endl;
 	return 0;
 }
