@@ -1,10 +1,12 @@
 #import pandas as pd
 import numpy as np
 from sklearn.preprocessing import scale
+from sklearn.metrics import mean_squared_error
 #from sklearn.cross_validation import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.svm import SVC
 import preprocess
+import math
 
 F_no = 36
 
@@ -47,6 +49,20 @@ for i in range(test_size):
 #Y_train = np.transpose(Y_all)
 
 forest_clf = RandomForestRegressor(n_estimators = 100, max_depth = 5, random_state = 0)
-forest_clf.fit(X_all, Y_all)
-Y_out = forest_clf.predict(X_test)
-print(Y_out)
+forest_clf.fit(X_all, Y_all.ravel())
+Y_pred = forest_clf.predict(X_test)
+print(Y_pred)
+#rms_error=mean_squared_error(Y_test.ravel(),Y_pred)
+manual_rms_error=0.0
+for i in range(training_set_size-train_size):
+	manual_rms_error+=(Y_test[i][0]-Y_pred[i])**2
+manual_rms_error=manual_rms_error/10000
+manual_rms_error=math.sqrt(manual_rms_error)
+print ("RMS error of model",manual_rms_error)
+np.savetxt('RFC_output.txt', Y_pred)
+f = open("RFC_output.txt", "a")
+f.write("\n \n RMS error of model:")
+f.write("%f" % (manual_rms_error))
+f.close()
+
+	
