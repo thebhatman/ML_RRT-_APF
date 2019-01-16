@@ -90,9 +90,9 @@ Mat bin(Mat a)
 	return a;
 }
 
-int main()
+int main(int argc, char** argv)
 {
-	float learning_paramter =  1.05854e+10 ;
+	int learning_paramter =  argc ;
 	//Mat a(500, 500, CV_8UC1, Scalar(0));
 	Mat a = imread("dataset/img0.jpg",0);
 	a=bin(a);

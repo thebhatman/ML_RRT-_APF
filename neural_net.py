@@ -8,6 +8,7 @@ import sklearn.linear_model
 import matplotlib 
 import sys
 import math
+import subprocess
 
 img = cv2.imread('images/img0.jpg')
 ideal_path = open('data/output.txt')
@@ -20,6 +21,10 @@ def ispath(x,y):
 
 def loss(A_L):
 	#make graph and array
+	file_arg = "apf.cpp "+A_L
+	subprocess.call(["g++",file_arg])
+	subprocess.call("./a.out")
+	#catch and use return values
 	return lossfunction(array)
 
 def lossfunction(epoch_array):
