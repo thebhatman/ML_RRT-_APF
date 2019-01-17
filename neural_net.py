@@ -11,7 +11,7 @@ import math
 import subprocess
 
 img = cv2.imread('images/img0.jpg')
-ideal_path = open('data/output.txt')
+ideal_path = open('data/finaloutput.txt')
 
 def ispath(x,y):
 	if img[x,y]<200 and img[x,y]>100:
@@ -19,7 +19,7 @@ def ispath(x,y):
 	else
 		return False
 
-def loss(A_L):
+def loss(A_L,num):
 	#make graph and array
 	file_arg = "apf.cpp "+A_L
 	subprocess.call(["g++",file_arg])
@@ -30,16 +30,23 @@ def loss(A_L):
     	lineSplit=line.split(" ")
     	for word in lineSplit:
     		array.append(int(word))
-	return lossfunction(array)
+	return lossfunction(array,num)
 
 def lossfunction(epoch_array):
 	step_down = 100
 	error = 0
-	#for each point in ideal and each epoch:
-		error += (idealx - epochx)*(idealx - epochx) + (idealy - epochy)*(idealy - epochy)
+	lineSplit=ideal_path[num].split(" ")
+	i = 0
+	ideal = 0
+	for word in line:
+		if word == '(' or word == ',' or word == ')':
+			continue
+		else:
+			ideal = epoch_array[i]
+			i+=1
+			error += (int(ideal) - int(word))*(int(ideal) - int(epochx)) 
+			
 	return error/step_down
-
-def test_train_split():
 
 def sigmoid(Z):
 	return 1/(1 + np.exp(-Z))
