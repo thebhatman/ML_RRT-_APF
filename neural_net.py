@@ -169,3 +169,7 @@ for i in range(training_set_size):
 	for j in range(F_no):
 		#print("fa",features[i][j])
 		X_all[i][j] = float(features[i][j])
+
+learning_rate = 0.01
+iterations = 50000
+final_model(X_all,3,learning_rate,iterations)
