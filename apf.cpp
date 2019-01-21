@@ -450,4 +450,4 @@ int main(int argc, char** argv)
 }
 
 // us this
-// std::ofstream("test.txt", std::ios::out).close();
+// ofs.open("test.txt", std::ofstream::out | std::ofstream::trunc);
