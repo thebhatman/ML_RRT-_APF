@@ -150,11 +150,22 @@ def update_parameters(parameters, grads, learning_rate):
         
     return parameters
 
-def final_model(X, Y, layers_dims, learning_rate, iterations, print_cost=False):
+def final_model(X, layers_dims, learning_rate, iterations, print_cost=False):
     costs = [] 
     weights = initialize_parameters_deep(layers_dims)
     
     for i in range(0, iterations):
         A_L, caches = forward_prop(X, weights)
-        grads = backward_prop(A_L, Y, caches,i)
+        grads = backward_prop(A_L, caches,i)
         parameters = update_parameters(weights, grads, learning_rate)
+
+number_of_features = 36
+features = preprocess.all_circles("data/obst.txt")
+training_set_size = 50000
+X_all = np.zeros(shape = (train_size, number_of_features))
+#Y_all = np.zeros(shape = (train_size,1))
+
+for i in range(training_set_size):
+	for j in range(F_no):
+		#print("fa",features[i][j])
+		X_all[i][j] = float(features[i][j])
