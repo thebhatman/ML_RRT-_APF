@@ -3,6 +3,7 @@
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/core/core.hpp"
 #include <stdio.h>
+#include <fstream>
 #include <stdlib.h>
 //#include <chrono> 
 #include <ctime>
@@ -90,11 +91,22 @@ Mat bin(Mat a)
 	return a;
 }
 
+int ceiling(int num, int denom)
+{
+	if(num % denom == 0)
+		return num/denom;
+	int x = num/denom;
+	return x + 1;
+}
 int main(int argc, char** argv)
 {
-	int learning_paramter =  argc ;
+	int learning_paramter =  atoi(argv[1]);//argc ;
+    string s0 = "dataset/";
+    string s1 = "img";
+    string s2 = argv[2];
+    string s3 = ".jpg";
 	//Mat a(500, 500, CV_8UC1, Scalar(0));
-	Mat a = imread("dataset/img0.jpg",0);
+	Mat a = imread(s0+s1+s2+s3,0);
 	a=bin(a);
 
 	srand(time(0));
@@ -125,17 +137,21 @@ int main(int argc, char** argv)
 	//dilate(c,c,kernel);
 	Mat b = a.clone();
 	node source, dest;
-	cout<<"Enter the co-ordinates of the source"<<endl;
-	cin>>source.curr.x>>source.curr.y;
+	//cout<<"Enter the co-ordinates of the source"<<endl;
+	//cin>>source.curr.x>>source.curr.y;
+	source.curr.x = 0;
+	source.curr.y = 0;
 	int o = source.curr.x;
 	int p = source.curr.y;
-	if(a.at<uchar>(p,o)>150) {cout<<"source is on the obstacle\n"; return 0;}
+	//if(a.at<uchar>(p,o)>150) {cout<<"source is on the obstacle\n"; return 0;}
 	a.at<uchar>(p,o) = 200;
-	cout<<"Enter the co-ordinates of the destination1: "<<endl;
-	cin>>dest.curr.x>>dest.curr.y;
+	//111cout<<"Enter the co-ordinates of the destination1: "<<endl;
+	//cin>>dest.curr.x>>dest.curr.y;
+	dest.curr.x = 299;
+	dest.curr.y = 299;
 	o = dest.curr.x;
 	p = dest.curr.y;
-	if(a.at<uchar>(p,o)>150) {cout<<"destination is on the obstacle\n"; return 0;}
+	//if(a.at<uchar>(p,o)>150) {cout<<"destination is on the obstacle\n"; return 0;}
 	a.at<uchar>(p,o) = 200;
 	source.mommy.curr.x = source.curr.x;
 	source.mommy.curr.y = source.curr.y;
@@ -431,21 +447,73 @@ int main(int argc, char** argv)
 	}
     //imshow("star_apf",a);
     //namedWindow("Final_apf", WINDOW_NORMAL);
-	
+	vector<node> path_points;
+	node mover;
+	int required_path_points = 50;
+	int existing_path_points=0;
+	int approx_step;
 	k = srctree.size() - 1;
 	while(k !=0 )
 	{
+		mover.curr.x = srctree[k].curr.x;
+		mover.curr.y = srctree[k].curr.y;
+		//path_points.push_back(mover);
 		temp3.curr.x = srctree[k].curr.x;
 		temp3.curr.y = srctree[k].curr.y;
 		line(b, temp3.curr, srctree[k].mommy.curr, Scalar(255), 1 ,8, 0);
 		k = srctree[k].mommy.index;
+		existing_path_points++;
 	}
+	existing_path_points++;
+	required_path_points+=1;
+	k = srctree.size() - 1;
+	int dada = k;
+	while(k !=0 )
+	{
+		mover.curr.x = srctree[dada].curr.x;
+		mover.curr.y = srctree[dada].curr.y;
+		path_points.push_back(mover);
+		temp3.curr.x = srctree[k].curr.x;
+		temp3.curr.y = srctree[k].curr.y;
+		required_path_points--;
+		if((existing_path_points-1)%(required_path_points-1)==0)
+			approx_step = (existing_path_points-1)/(required_path_points-1);
+		else
+			approx_step = (existing_path_points-1)/(required_path_points-1)+1;
+		for(i = 0; i < approx_step; i++)
+		{
+			if(k == 0)
+				break;
+			k = srctree[k].mommy.index;
+			existing_path_points--;
+		}
+		//line(b, temp3.curr, srctree[k].mommy.curr, Scalar(255), 1 ,8, 0);
+		dada = k;
+
+	}
+	mover.curr.x = srctree[dada].curr.x;
+	mover.curr.y = srctree[dada].curr.y;
+	path_points.push_back(mover);
 	//auto stop = std::chrono::high_resolution_clock::now();
 	time_t stop;
 	time(&stop);
+	int n_num = path_points.size();
+	// cout<<path_points[n-1].x<<" "<<path_points[n-1].y;
+	ofstream myfile;
+  	myfile.open ("apf_out.txt");
+  	//myfile << "Writing this to a file.\n";
+  	
+	for(i = n_num - 1; i >= 0; i--) 
+	{
+		myfile<<(int)path_points[i].curr.x<<" "<<(int)path_points[i].curr.y<<" ";
+	}
+	//ofs.open("test.txt", std::ofstream::out | std::ofstream::trunc);
+	//cout<<endl<<n_num;
+	myfile.close();
+
 	//imshow("Final_apf", b);
-	//while(waitKey(0)!=27){}
-	cout << stop - start << endl;
+	//while(waitKey(0)!=27){}2
+	//cout << stop - start << endl;
 	return 0;
 }
 
