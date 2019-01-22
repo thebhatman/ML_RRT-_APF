@@ -21,7 +21,7 @@ def ispath(x,y):
 
 def loss(A_L,num):
 	#make graph and array
-	file_arg = "apf.cpp "+A_L
+	file_arg = "apf.cpp "+A_L+" "+num
 	subprocess.call(["g++",file_arg])
 	subprocess.call("./a.out")
 	text = open('file.txt',"r")
