@@ -12,7 +12,7 @@ import subprocess
 
 img = cv2.imread('images/img0.jpg')
 ideal_path = open('data/finaloutput.txt')
-
+.
 def ispath(x,y):
 	if img[x,y]<200 and img[x,y]>100:
 		return True
@@ -32,7 +32,7 @@ def loss(A_L,num):
     		array.append(int(word))
 	return lossfunction(array,num)
 
-def lossfunction(epoch_array):
+def lossfunction(epoch_array,num):
 	step_down = 100
 	error = 0
 	lineSplit=ideal_path[num].split(" ")
@@ -123,11 +123,11 @@ def linear_activation_backward(dA, cache, activation):
     
     return dA_prev, dW, db
 
-def backward_prop(A_L,weights):
+def backward_prop(A_L,weights,i):
 	grads = {}
     L = len(caches) 
     m = A_L.shape[1]    
-    dA_L = loss(A_L)
+    dA_L = loss(A_L,i)
     current_cache = caches[L-1]
     grads["dA" + str(L)], grads["dW" + str(L)], grads["db" + str(L)] = linear_activation_backward(dA_L, current_cache, activation = "Output")
     
@@ -150,12 +150,26 @@ def update_parameters(parameters, grads, learning_rate):
         
     return parameters
 
-def final_model(X, Y, layers_dims, learning_rate, iterations, print_cost=False):
+def final_model(X, layers_dims, learning_rate, iterations, print_cost=False):
     costs = [] 
     weights = initialize_parameters_deep(layers_dims)
     
     for i in range(0, iterations):
         A_L, caches = forward_prop(X, weights)
-        cost = compute_cost(A_L, Y)
-        grads = backward_prop(A_L, Y, caches)
+        grads = backward_prop(A_L, caches,i)
         parameters = update_parameters(weights, grads, learning_rate)
+
+number_of_features = 36
+features = preprocess.all_circles("data/obst.txt")
+training_set_size = 50000
+X_all = np.zeros(shape = (train_size, number_of_features))
+#Y_all = np.zeros(shape = (train_size,1))
+
+for i in range(training_set_size):
+	for j in range(F_no):
+		#print("fa",features[i][j])
+		X_all[i][j] = float(features[i][j])
+
+learning_rate = 0.01
+iterations = 50000
+final_model(X_all,3,learning_rate,iterations)
