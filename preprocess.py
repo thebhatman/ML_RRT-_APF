@@ -2,8 +2,8 @@ import re
 import numpy as np
 import sys
 
-DATA = 100000
-F_no = 36
+DATA = 50000
+F_no = 57
 
 def potential(filename):
 	distance = open(filename,"r")
@@ -17,9 +17,16 @@ def potential(filename):
 def func_num(filename):
 	num = open(filename,"r")
 	number = []
+	i = 0
 	for line in num:
-		lineSplit=line.split(" ")
-		number.append(int(lineSplit[0]))
+		#lineSplit=line.split(" ")
+		#print(str(len(line)) + " "+str(i))
+		i+=1
+		number.append(int(line[0]+line[1]))
+		if(i>49999):
+			break
+		#print(int(line[0]+line[1]))
+		
 	return number
 
 def features(filename):
@@ -36,6 +43,7 @@ def features(filename):
 	
 def all_circles(filename):
 	number = func_num("data/number.txt")
+	print(len(number))
 	num  = 0
 	obs = open(filename,"r")
 	k = 0
@@ -58,7 +66,8 @@ def all_circles(filename):
 			num += 1
 			j = 0
 			#continue
-	
+		
+		#print("j = ",j)
 		lineSplit = line.split(" ")
 		array[num][j] = lineSplit[0]
 		array[num][j+1] = lineSplit[1]
