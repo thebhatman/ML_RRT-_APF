@@ -22,7 +22,8 @@ def ispath(x,y):
 
 def loss(A_L,num):
 	#make graph and array
-	file_arg = "apf.cpp "+A_L+" "+num
+	#print("apf.cpp "+str(A_L) +" "+str(num))
+	file_arg = "apf.cpp "+str(A_L)+" "+str(num)
 	subprocess.call(["g++",file_arg])
 	subprocess.call("./a.out")
 	text = open('file.txt',"r")
@@ -91,11 +92,15 @@ def linear_activation_forward(A_prev, W, b, activation):
 def forward_prop(X,weights):
 	caches = []
 	A = X
-	L = len(weights) // 2                
+	L = len(weights)//2
+	#print(L, "LLLL")                
 	for l in range(1, L):
 		A_prev = A 
 		A, cache = linear_activation_forward(A_prev, weights['W' + str(l)], weights['b' + str(l)], activation = "relu")
 		caches.append(cache)
+		print("hiiiiiiii")
+		print(A)
+		print("hiiiiiiii")
  
 	A_L, cache = linear_activation_forward(A, weights['W' + str(L)], weights['b' + str(L)], activation = "Output")
 	caches.append(cache)
@@ -157,10 +162,11 @@ def final_model(X, layers_dims, learning_rate, iterations, print_cost=False):
 	
 	for i in range(0, iterations):
 		A_L, caches = forward_prop(X, weights)
+		#print(A_L)
 		grads = backward_prop(A_L, caches,i)
 		parameters = update_parameters(weights, grads, learning_rate)
 
-number_of_features = 36
+number_of_features = 57
 features = preprocess.all_circles("data/obst.txt")
 training_set_size = 50000
 X_all = np.zeros(shape = (training_set_size, number_of_features))
@@ -171,12 +177,16 @@ for i in range(training_set_size):
 		#print("fa",features[i][j])
 		X_all[i][j] = float(features[i][j])
 
+#X_all = np.transpose(X_all)
+
 learning_rate = 0.01
-iterations = 10
-n_x = X_all.shape[0]   
+iterations = 1
+n_x = 57 
+#print(n_x," nnxnxnnxnxn")  
 n_y = 1
-layer_dims = (n_x, 7,5,4, n_y)
-final_model(X_all,layer_dims,learning_rate,iterations)
+print(np.transpose(X_all).shape)
+layer_dims = (n_x, 19,9,3, n_y)
+final_model(np.transpose(X_all),layer_dims,learning_rate,iterations)
 
 # features = preprocess.all_circles("data/obst.txt")
 
