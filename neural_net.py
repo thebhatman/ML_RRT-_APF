@@ -98,9 +98,9 @@ def forward_prop(X,weights):
 		A_prev = A 
 		A, cache = linear_activation_forward(A_prev, weights['W' + str(l)], weights['b' + str(l)], activation = "relu")
 		caches.append(cache)
-		print("hiiiiiiii")
-		print(A)
-		print("hiiiiiiii")
+		#print("hiiiiiiii")
+		#print((np.transpose(A))[0].shape)
+		#print("hiiiiiiii")
  
 	A_L, cache = linear_activation_forward(A, weights['W' + str(L)], weights['b' + str(L)], activation = "Output")
 	caches.append(cache)
@@ -132,8 +132,9 @@ def linear_activation_backward(dA, cache, activation):
 def backward_prop(A_L,caches,i):
 	grads = {}
 	L = len(caches) 
-	m = A_L.shape[1]    
-	dA_L = loss(A_L,i)
+	m = A_L.shape[1]
+	print((np.transpose(A_L))[0][0])    
+	dA_L = loss(np.transpose(A_L)[0][0],i)
 	current_cache = caches[L-1]
 	grads["dA" + str(L)], grads["dW" + str(L)], grads["db" + str(L)] = linear_activation_backward(dA_L, current_cache, activation = "Output")
 	
@@ -188,22 +189,3 @@ print(np.transpose(X_all).shape)
 layer_dims = (n_x, 19,9,3, n_y)
 final_model(np.transpose(X_all),layer_dims,learning_rate,iterations)
 
-# features = preprocess.all_circles("data/obst.txt")
-
-# training_set_size = 100000
-
-# train_size = int(training_set_size*0.9)
-# test_size = int(training_set_size*0.1)
-
-# X_all = np.zeros(shape = (train_size, F_no))
-# Y_all = np.zeros(shape = (train_size,1))
-
-# X_test = np.zeros(shape = (test_size, F_no))
-# Y_test = np.zeros(shape = (test_size,1))
-# #image = 0
-
-# for i in range(train_size):
-# 	for j in range(F_no):
-# 		#print("fa",features[i][j])
-# 		X_all[i][j] = float(features[i][j])
-# 	Y_all[i][0] = float(pot_func[i][:-1])
