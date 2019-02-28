@@ -40,7 +40,7 @@ def lossfunction(epoch_array,num):
 	lineSplit=ideal_path[num].split(" ")
 	i = 0
 	ideal = 0
-	for word in line:
+	for word in lineSplit:
 		if word == '(' or word == ',' or word == ')':
 			continue
 		else:
