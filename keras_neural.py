@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import tensorflow as tf
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.wrappers.scikit_learn import KerasRegressor
@@ -11,6 +12,8 @@ import sys
 import math
 import subprocess
 import preprocess
+import os
+import keras.backend as K
 # import theano.tensor as T
 # from theano import function
 
@@ -29,32 +32,50 @@ def custom_loss(y_true,y_pred):
 	#make graph and array
 	#print("apf.cpp "+str(A_L) +" "+str(num))
 	global image_num
-	file_arg = +str(y_pred)+" "+str(image_num)
+	print((y_true.shape))
+	file_arg = str(y_pred)+" "+str(image_num)
 	image_num+=1
-	subprocess.call(["./apf",file_arg])
+	os.system(("./apf "+ file_arg))
 	text = open('apf_out.txt',"r")
 	array = []
 	for line in text:
 		lineSplit=line.split(" ")
+		count = 1
+		# print(len(lineSplit))
 		for word in lineSplit:
-			array.append(int(word))
+			count+=1
+			if(count<=len(lineSplit)):
+				# print(word)
+				array.append(int(word))
 	return lossfunction(array,image_num-1)
 
 def lossfunction(epoch_array,num):
-	step_down = 100
+	step_down = 10000
 	error = 0
-	lineSplit=ideal_path[num].split(" ")
+	count = 0
+	for line in ideal_path:
+		if(count==num):
+			lineSplit = line.split(" ")
+			break
+		count+=1
 	i = 0
 	ideal = 0
-	for word in line:
-		if word == '(' or word == ',' or word == ')':
+	count = 1
+	#Y = np.zeros(shape = (1, 1))
+	#print(lineSplit)
+	for word in lineSplit:
+		count+=1
+		if word == '(' or word == ',' or word == ')' or word == ' ' or word == '':
 			continue
 		else:
-			ideal = epoch_array[i]
-			i+=1
-			error += (int(ideal) - int(word))*(int(ideal) - int(epochx)) 
-			
-	return error/step_down
+			if(count<=len(lineSplit)) and i < len(epoch_array):
+				ideal = epoch_array[i]
+				i+=1
+				#print(i)
+				#print(word)
+				error += (int(ideal) - int(word))*(int(ideal) - int(word))
+	Y = tf.constant(error,dtype=tf.float32)
+	return Y 
 
 number_of_features = 57
 features = preprocess.all_circles("data/obst.txt")
