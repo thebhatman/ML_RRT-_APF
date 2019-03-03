@@ -502,7 +502,7 @@ int main(int argc, char** argv)
 	ofstream myfile;
   	myfile.open ("apf_out.txt");
   	//myfile << "Writing this to a file.\n";
-  	
+  	cout << "YOOOO"<< endl;
 	for(i = n_num - 1; i >= 0; i--) 
 	{
 		myfile<<(int)path_points[i].curr.x<<" "<<(int)path_points[i].curr.y<<" ";
