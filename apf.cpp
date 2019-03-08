@@ -449,7 +449,7 @@ int main(int argc, char** argv)
     //namedWindow("Final_apf", WINDOW_NORMAL);
 	vector<node> path_points;
 	node mover;
-	int required_path_points = 50;
+	int required_path_points = 51;
 	int existing_path_points=0;
 	int approx_step;
 	k = srctree.size() - 1;
@@ -502,7 +502,7 @@ int main(int argc, char** argv)
 	ofstream myfile;
   	myfile.open ("apf_out.txt");
   	//myfile << "Writing this to a file.\n";
-  	cout << "YOOOO"<< endl;
+  	cout << n_num<< endl;
 	for(i = n_num - 1; i >= 0; i--) 
 	{
 		myfile<<(int)path_points[i].curr.x<<" "<<(int)path_points[i].curr.y<<" ";
