@@ -26,7 +26,9 @@ def loss(A_L,num):
 	#print("apf.cpp "+str(A_L) +" "+str(num))
 	file_arg = str(A_L)+" "+str(num)
 	#subprocess.call(["g++",file_arg])
+	print("running ./apf " + file_arg)
 	os.system("./apf " + file_arg)
+	print("opening file")
 	text = open('apf_out.txt',"r")
 	array = []
 	for line in text:
@@ -136,6 +138,7 @@ def backward_prop(A_L,caches,i):
 	m = A_L.shape[1]
 	print((np.transpose(A_L))[0][0])    
 	dA_L = loss(np.transpose(A_L)[0][0],i)
+	print("loss calculated")
 	current_cache = caches[L-1]
 	grads["dA" + str(L)], grads["dW" + str(L)], grads["db" + str(L)] = linear_activation_backward(dA_L, current_cache, activation = "Output")
 	
@@ -162,11 +165,14 @@ def final_model(X, layers_dims, learning_rate, iterations, print_cost=False):
 	costs = [] 
 	weights = initialize_parameters_deep(layers_dims)
 	
-	for i in range(0, iterations):
+	for i in range(1, iterations):
 		A_L, caches = forward_prop(X, weights)
 		#print(A_L)
+		print("Going to backprop")
 		grads = backward_prop(A_L, caches,i)
+		print("updating params")
 		parameters = update_parameters(weights, grads, learning_rate)
+		print("params updated")
 
 number_of_features = 57
 features = preprocess.all_circles("data/obst.txt")
