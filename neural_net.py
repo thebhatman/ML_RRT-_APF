@@ -10,6 +10,7 @@ import sys
 import math
 import subprocess
 import preprocess
+import os
 
 img = cv2.imread('images/img0.jpg')
 ideal_path = open('data/finaloutput.txt')
@@ -23,10 +24,10 @@ def ispath(x,y):
 def loss(A_L,num):
 	#make graph and array
 	#print("apf.cpp "+str(A_L) +" "+str(num))
-	file_arg = "apf.cpp "+str(A_L)+" "+str(num)
-	subprocess.call(["g++",file_arg])
-	subprocess.call("./a.out")
-	text = open('file.txt',"r")
+	file_arg = str(A_L)+" "+str(num)
+	#subprocess.call(["g++",file_arg])
+	os.system("./apf " + file_arg)
+	text = open('apf_out.txt',"r")
 	array = []
 	for line in text:
 		lineSplit=line.split(" ")
