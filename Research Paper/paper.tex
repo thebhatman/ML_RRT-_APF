@@ -21,20 +21,20 @@
 \begin{document}
 %
 %\title{STUD RRT*: Sampling-based Time-oriented Unrealistic planner using Doppler Effect Rapidly Exploring Random Tree Star}
-\title{Machine Learning rooted Potential piloted RRT* for expeditious Path Planning}
+\title{Deep Learning rooted Potential piloted RRT* for expeditious Path Planning}
 %
 %\titlerunning{Abbreviated paper title}
 % If the paper title is too long for the running head, you can set
 % an abbreviated paper title here
 %
 \author{
-Snehal Reddy Koukuntla\inst{*}, Manjunath Bhat\inst{*} and Shamin Aggarwal\inst{*}}
+*YET TO BE PUBLISHED \inst{*} \\Snehal Reddy Koukuntla\inst{*}, Manjunath Bhat\inst{*}, Shamin Aggarwal \inst{*} and Rajat Kumar Jenamani}
 %
 % First names are abbreviated in the running head.
 % If there are more than two authors, 'et al.' is used.
 %
 \institute{Indian Institute of Technology Kharagpur, India\\
-\email{ksnehalreddy@iitkgp.ac.in, manjunathbhat9920@iitkgp.ac.in, shamin1998@iitkgp.ac.in}}
+\email{ksnehalreddy@iitkgp.ac.in, manjunathbhat9920@iitkgp.ac.in, shamin1998@iitkgp.ac.in,rajatkj11@gmail.com}}
 %
 \maketitle              % typeset the header of the contribution
 %
@@ -170,7 +170,7 @@ Potential Field (APF) introduced in \cite{potential}.  A lot of research has bee
 
 \section{\centering{Algorithm}}
 \vspace{-1mm}
-The previous works describe various ways in which the RRTs have been modified to improve the optimality, speed and dynamism of path generation. The potential piloted RRT* promises more optimal paths,but is not feasible as it is to apply on wide range of environments as it has sensitive parameters to be tuned, the change it which can lead to drastic changes in the resultant path.
+The previous works describe various ways in which the RRTs have been modified to improve the optimality, speed and dynamism of path generation. The potential piloted RRT* promises more optimal paths,but is not feasible as it has sensitive parameters to be tuned, the change it which can lead to drastic changes in the resultant path and those parameters have different values on different parts on the field.
 
 \begin{figure}
 \begin{center}
@@ -198,8 +198,27 @@ Now how much the tree should grow towards the destination relative to growing aw
 \end{center}
 \end{figure}
 
-\subsection{Ideal Path Data Genration:}
-To find the ideal constants of potential field , we first found the ideal path by using BFS and Dijkstra. This ideal paths took a considerable amount of time to form, but this a one-time investment for training. Once, the ideal path for all the 1,00,000 is generated is stored in the form of a list of coordinates for further use. These ideal paths were then made use of in the neural networks. An example is shown in the figure below (Fig 3).
+\subsection{Ideal Potential Data Genration:}
+To find the ideal constants of potential field , we first divided the field into 20X20 pixel sized grids whose centre is a good approximation for rest of the points in grid while finding the ideal potential functions at every point in the field. We found the ideal path by using BFS and Dijkstra from each of the grid's centre to the final destination. Using this ideal path we found the value of ideal k as follows -
+
+\vspace{4mm}
+
+Let the magnitude of net repulsive field be $k\sum_{i=1}^{n}\frac{\text{Q_{i}}}{\text{r_{i}}}$ and the magnitude of attractive field be $\frac{\text{Q^\prime}}{\text{r^\prime}}$
+
+Let the angle between repulsive field vector and the ideal vector obtained from the ideal path be $\theta$ and let the angle between attractive field and the ideal vector be $\alpha$.
+
+\vspace{4mm}
+
+$k\sum_{i=1}^{n}\frac{\text{Q_{i}}}{\text{r_{i}}}{sin{\theta}}  =  \frac{\text{Q^\prime}}{\text{r^\prime}}{sin{\alpha}}$
+
+\vspace{4mm}
+
+
+From this expression k can be evaluated.
+
+\vspace{4mm}
+
+An example is shown in the figure below (Fig 3).
  \vspace{5mm}
 
 \subsection{Training:}
@@ -226,16 +245,12 @@ The following table show the comparison between RRT* tree and the RRT* APF tree 
  \hline
  S.No. & RRT* &DL RRT* APF\\
  \hline
- 1   & AF    &AFG\\
- 2&   AX  & ALA   \\
- 3 &AL & ALB\\
- 4    &DZ & DZA\\
- 5&   AS & WWR \\
-6& AD  & AND\\
- 7& AO  & AGO\\
- 8& AO  & AGO\\
- 9& AO  & AGO\\
- 10& AO  & AGO\\
+ 1   & 3.58    &5.47\\
+ 2&   4.56  & 5.81   \\
+ 3 &4.28 & 6.31\\
+ 4    &5.96 & 6.42\\
+ 5&   3.42 & 5.92 \\
+
  \hline
 \end{tabular}
 \end{center}
