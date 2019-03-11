@@ -1,4 +1,4 @@
-# ML_RRT*_APF
+# DL_RRT*_APF
 
 [![Built with ❤](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com/#)
 
@@ -19,7 +19,7 @@ We then used BFS and Dijkstra to calculate actual shortest path (since it was un
 
 ![alt_text](https://github.com/Snehal-Reddy/ML_RRT-_APF/blob/master/images/chaljabhai_screenshot_10.12.2018.png) 
 
-Using the above data and using the area of the obstacle and the centre of the obstacle as features , we try to find the APF constants by training.
+Using the above data and using the area of the obstacle and the centre of the obstacle as features , we designed the cost function by comparing the predicted path after an epoch and the ideal path by comparing the path coordinate lists using mean square error. With this custom error function we built a neural network with the help of Keras. We had two hidden layers. We used 5 fold cross validation to improve the neural network. We also made use Adam's optimizer. Using this we predicted the potential function.
 
 The results turned out pretty well and the tree converged well towards the target . 
 

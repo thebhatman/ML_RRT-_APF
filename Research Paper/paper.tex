@@ -21,20 +21,20 @@
 \begin{document}
 %
 %\title{STUD RRT*: Sampling-based Time-oriented Unrealistic planner using Doppler Effect Rapidly Exploring Random Tree Star}
-\title{Machine Learning rooted Potential piloted RRT* for expeditious Path Planning}
+\title{Deep Learning rooted Potential piloted RRT* for expeditious Path Planning}
 %
 %\titlerunning{Abbreviated paper title}
 % If the paper title is too long for the running head, you can set
 % an abbreviated paper title here
 %
 \author{
-Snehal Reddy Koukuntla\inst{*}, Manjunath Bhat\inst{*} and Shamin Aggarwal\inst{*}}
+*YET TO BE PUBLISHED \inst{*} \\Snehal Reddy Koukuntla\inst{*}, Manjunath Bhat\inst{*}, Shamin Aggarwal \inst{*} and Rajat Kumar Jenamani}
 %
 % First names are abbreviated in the running head.
 % If there are more than two authors, 'et al.' is used.
 %
 \institute{Indian Institute of Technology Kharagpur, India\\
-\email{ksnehalreddy@iitkgp.ac.in, manjunathbhat9920@iitkgp.ac.in, shamin1998@iitkgp.ac.in}}
+\email{ksnehalreddy@iitkgp.ac.in, manjunathbhat9920@iitkgp.ac.in, shamin1998@iitkgp.ac.in,rajatkj11@gmail.com}}
 %
 \maketitle              % typeset the header of the contribution
 %
@@ -170,7 +170,7 @@ Potential Field (APF) introduced in \cite{potential}.  A lot of research has bee
 
 \section{\centering{Algorithm}}
 \vspace{-1mm}
-The previous works describe various ways in which the RRTs have been modified to improve the optimality, speed and dynamism of path generation. The potential piloted RRT* promises more optimal paths,but is not feasible as it is to apply on wide range of environments as it has sensitive parameters to be tuned, the change it which can lead to drastic changes in the resultant path.
+The previous works describe various ways in which the RRTs have been modified to improve the optimality, speed and dynamism of path generation. The potential piloted RRT* promises more optimal paths,but is not feasible as it has sensitive parameters to be tuned, the change it which can lead to drastic changes in the resultant path and those parameters have different values on different parts on the field.
 
 \begin{figure}
 \begin{center}
@@ -190,18 +190,6 @@ $\sum_{i=1}^{n}V_{i}=k\sum_{i=1}^{n}\frac{\text{Q_{i}}}{\text{r_{i}}} + \text{k^
 
 Now how much the tree should grow towards the destination relative to growing away from the obstacles, dependant on $k$ and $k^\prime$ is a very sensitive parameter and has serious implications(Fig 2 and Fig 3).
 \vspace{3mm}
-\begin{figure}
-\begin{center}
-\includegraphics[scale=1.5]{tree.png}
-    \caption{ The tree growth of RRT-Star with APF for a non-ideal value of Potential Function. It is evident that repulsion from the obstacle is not significant enough and that there is unnecessary branching of the tree. The final path is not a good approximation of the shortest path.(Fig 4)} \label{fig1}
-\end{center}
-\end{figure}
-\begin{figure}
-\begin{center}
-\includegraphics[scale=0.65]{stuckyy.png}
-    \caption{ An illustration of a case where the tree gets stuck in a local minimum, due to highly unsuitable value of Potential Function.}\label{fig1}
-\end{center}
-\end{figure}
 
 \begin{figure}
 \begin{center}
@@ -210,12 +198,31 @@ Now how much the tree should grow towards the destination relative to growing aw
 \end{center}
 \end{figure}
 
-\subsection{Ideal Path and Potential Constants:}
-To find the ideal constants of potential field , we first found the ideal path by using BFS and Dijkstra. These ideal paths were then made use of in the neural networks later on. An example is shown in the figure above (Fig 5).
+\subsection{Ideal Potential Data Genration:}
+To find the ideal constants of potential field , we first divided the field into 20X20 pixel sized grids whose centre is a good approximation for rest of the points in grid while finding the ideal potential functions at every point in the field. We found the ideal path by using BFS and Dijkstra from each of the grid's centre to the final destination. Using this ideal path we found the value of ideal k as follows -
 
+\vspace{4mm}
+
+Let the magnitude of net repulsive field be $k\sum_{i=1}^{n}\frac{\text{Q_{i}}}{\text{r_{i}}}$ and the magnitude of attractive field be $\frac{\text{Q^\prime}}{\text{r^\prime}}$
+
+Let the angle between repulsive field vector and the ideal vector obtained from the ideal path be $\theta$ and let the angle between attractive field and the ideal vector be $\alpha$.
+
+\vspace{4mm}
+
+$k\sum_{i=1}^{n}\frac{\text{Q_{i}}}{\text{r_{i}}}{sin{\theta}}  =  \frac{\text{Q^\prime}}{\text{r^\prime}}{sin{\alpha}}$
+
+\vspace{4mm}
+
+
+From this expression k can be evaluated.
+
+\vspace{4mm}
+
+An example is shown in the figure below (Fig 3).
+ \vspace{5mm}
 
 \subsection{Training:}
-The position of the obstacle is an important determinant of the RRT* Tree. So is the area of the obstacle. So we took the centres of the each obstacle blob and the total area of the obstacles as the features of the neural network. We designed the cost function by comparing the predicted path after an epoch and the ideal path. Using this we predicted the potential function. We then used the potential function thus predicted to run an RRT* APF tree and an example is shown in Fig. 3.
+The position of the obstacle is an important determinant of the RRT* Tree. So is the area of the obstacle. So we took the centres of the each obstacle blob and the total area of the obstacles as the features of the neural network. We designed the cost function by comparing the predicted path after an epoch and the ideal path by comparing the path coordinate lists using mean square error. With this custom error function we built a neural network with the help of Keras. We had two hidden layers. We used 5 fold cross validation to improve the neural network. We also made use Adam's optimizer. Using this we predicted the potential function. We then used the potential function thus predicted to run an RRT* APF tree and an example is shown in Fig. 3.
 \vspace{10mm}
 \begin{figure}
 \begin{center}
@@ -224,9 +231,48 @@ The position of the obstacle is an important determinant of the RRT* Tree. So is
 \end{center}
 \end{figure}
 
-\section{\centering{Comaparison}}
+\section{\centering{Results and Improvements:}}
 \subsection{Time of convergence:}
+The RRT* tree with the predicted values of potential functions converged faster than normal RRT* tree. For non ideal potential values, normal RRT* tree would get stuck at local minima which was being avoided by the predicted values.
+
+The following table show the comparison between RRT* tree and the RRT* APF tree with predicted potential functions, wrt. to the time of covergence.
+
+\vspace{10mm}
+\begin{center}
+\begin{tabular}{ |p{1cm}||p{3cm}|p{3cm}|  }
+ \hline
+ \multicolumn{3}{|c|}{Time of Convergence} \\
+ \hline
+ S.No. & RRT* &DL RRT* APF\\
+ \hline
+ 1   & 3.58    &5.47\\
+ 2&   4.56  & 5.81   \\
+ 3 &4.28 & 6.31\\
+ 4    &5.96 & 6.42\\
+ 5&   3.42 & 5.92 \\
+
+ \hline
+\end{tabular}
+\end{center}
+
+
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.65]{stuckyy.png}
+    \caption{ An illustration of a case where the tree gets stuck in a local minimum, due to highly unsuitable value of Potential Function, which is avoided using learning techniques}\label{fig1}
+\end{center}
+\end{figure}
+
 \subsection{Width of the tree:}
+The width of the tree also reduced significantly implying that the predicted values of potential functions were close to the ideal ones. The images below show the comparison between RRT* and DL RRT* APF with respect to the width of the tree.
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=1.5]{tree.png}
+    \caption{ The tree growth of RRT-Star with APF for a non-ideal value of Potential Function. It is evident that repulsion from the obstacle is not significant enough and that there is unnecessary branching of the tree. The final path is not a good approximation of the shortest path.(Fig 4)} \label{fig1}
+\end{center}
+\end{figure}
 % \begin{figure}
 % We conducted an experiment based on tree generation time given a set of obstacles. The experimental setup included ROS based communication nodes and a GUI based interactive platform for setting up the environment. This was performed on Linux 4.4.0-127-generic with 8 GiB memory and 2.3 GHz x 8 CPU.
 % % \vspace{-1mm}

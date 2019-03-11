@@ -10,6 +10,7 @@ import sys
 import math
 import subprocess
 import preprocess
+import os
 
 img = cv2.imread('images/img0.jpg')
 ideal_path = open('data/finaloutput.txt')
@@ -22,32 +23,44 @@ def ispath(x,y):
 
 def loss(A_L,num):
 	#make graph and array
-	file_arg = "apf.cpp "+A_L+" "+num
-	subprocess.call(["g++",file_arg])
-	subprocess.call("./a.out")
-	text = open('file.txt',"r")
+	#print("apf.cpp "+str(A_L) +" "+str(num))
+	file_arg = str(A_L[0][0])+" "+str(num)
+	#subprocess.call(["g++",file_arg])
+	print("running ./apf " + file_arg)
+	os.system("./apf " + file_arg)
+	print("opening file")
+	text = open('apf_out.txt',"r")
 	array = []
 	for line in text:
 		lineSplit=line.split(" ")
+		lineSplit = lineSplit[:-1]
 		for word in lineSplit:
+			#print(word)
 			array.append(int(word))
 	return lossfunction(array,num)
 
 def lossfunction(epoch_array,num):
 	step_down = 100
 	error = 0
-	lineSplit=ideal_path[num].split(" ")
+	count = 1
+	for line in ideal_path:
+		if(count==num):
+			lineSplit = line.split(" ")
+			break
+		count+=1
+	lineSplit = lineSplit[:-1]
 	i = 0
 	ideal = 0
-	for word in line:
-		if word == '(' or word == ',' or word == ')':
+	for word in lineSplit:
+		if word == '(' or word == ',' or word == ')' or word == '' or word == ' ':
 			continue
 		else:
 			ideal = epoch_array[i]
 			i+=1
-			error += (int(ideal) - int(word))*(int(ideal) - int(epochx)) 
+			#print(word)
+			error += (int(ideal) - int(word))*(int(ideal) - int(word)) 
 			
-	return error/step_down
+	return np.array([[error/step_down]])
 
 def sigmoid(Z):
 	return 1/(1 + np.exp(-Z))
@@ -91,11 +104,15 @@ def linear_activation_forward(A_prev, W, b, activation):
 def forward_prop(X,weights):
 	caches = []
 	A = X
-	L = len(weights) // 2                
+	L = len(weights)//2
+	#print(L, "LLLL")                
 	for l in range(1, L):
 		A_prev = A 
 		A, cache = linear_activation_forward(A_prev, weights['W' + str(l)], weights['b' + str(l)], activation = "relu")
 		caches.append(cache)
+		#print("hiiiiiiii")
+		#print((np.transpose(A))[0].shape)
+		#print("hiiiiiiii")
  
 	A_L, cache = linear_activation_forward(A, weights['W' + str(L)], weights['b' + str(L)], activation = "Output")
 	caches.append(cache)
@@ -127,8 +144,10 @@ def linear_activation_backward(dA, cache, activation):
 def backward_prop(A_L,caches,i):
 	grads = {}
 	L = len(caches) 
-	m = A_L.shape[1]    
-	dA_L = loss(A_L,i)
+	m = A_L.shape[1]
+	print((np.transpose(A_L)))    
+	dA_L = loss(np.transpose(A_L),i)
+	print("loss calculated")
 	current_cache = caches[L-1]
 	grads["dA" + str(L)], grads["dW" + str(L)], grads["db" + str(L)] = linear_activation_backward(dA_L, current_cache, activation = "Output")
 	
@@ -154,13 +173,20 @@ def update_parameters(parameters, grads, learning_rate):
 def final_model(X, layers_dims, learning_rate, iterations, print_cost=False):
 	costs = [] 
 	weights = initialize_parameters_deep(layers_dims)
-	
-	for i in range(0, iterations):
-		A_L, caches = forward_prop(X, weights)
+	parameters = None
+	for i in range(1, iterations):
+		A_L, caches = forward_prop(X[:,i:i+1], weights)
+		#print(A_L)
+		print("Going to backprop")
 		grads = backward_prop(A_L, caches,i)
+		print("updating params")
 		parameters = update_parameters(weights, grads, learning_rate)
+		print("params updated")
 
-number_of_features = 36
+	final_pot = forward_prop(X[:,0:1],parameters)
+	print(final_pot[0])
+
+number_of_features = 57
 features = preprocess.all_circles("data/obst.txt")
 training_set_size = 50000
 X_all = np.zeros(shape = (training_set_size, number_of_features))
@@ -171,29 +197,14 @@ for i in range(training_set_size):
 		#print("fa",features[i][j])
 		X_all[i][j] = float(features[i][j])
 
+#X_all = np.transpose(X_all)
+
 learning_rate = 0.01
 iterations = 10
-n_x = X_all.shape[0]   
+n_x = 57 
+#print(n_x," nnxnxnnxnxn")  
 n_y = 1
-layer_dims = (n_x, 7,5,4, n_y)
-final_model(X_all,layer_dims,learning_rate,iterations)
+print(np.transpose(X_all).shape)
+layer_dims = (n_x, 19,9,3, n_y)
+final_model(np.transpose(X_all),layer_dims,learning_rate,iterations)
 
-# features = preprocess.all_circles("data/obst.txt")
-
-# training_set_size = 100000
-
-# train_size = int(training_set_size*0.9)
-# test_size = int(training_set_size*0.1)
-
-# X_all = np.zeros(shape = (train_size, F_no))
-# Y_all = np.zeros(shape = (train_size,1))
-
-# X_test = np.zeros(shape = (test_size, F_no))
-# Y_test = np.zeros(shape = (test_size,1))
-# #image = 0
-
-# for i in range(train_size):
-# 	for j in range(F_no):
-# 		#print("fa",features[i][j])
-# 		X_all[i][j] = float(features[i][j])
-# 	Y_all[i][0] = float(pot_func[i][:-1])

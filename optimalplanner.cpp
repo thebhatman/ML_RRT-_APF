@@ -6,9 +6,9 @@
 #include <stdlib.h>
 using namespace std;
 using namespace cv;
-#define ROWS 300
+#define ROWS 200
 #define COLS 300
-#define DATASET 100000
+#define DATASET 1
 Mat img;
 struct graph_node
 {
@@ -105,6 +105,7 @@ int BFS(graph_node parent[ROWS][COLS], graph_node v)
 	while(!isempty(qP))
 	{
 		current=dequeue(qP);
+		cout << current.x << ' ' << current.y << endl;
 		for(k=-1;k<=1;k++)
 			for(l=-1;l<=1;l++)
 			{
@@ -120,9 +121,9 @@ int BFS(graph_node parent[ROWS][COLS], graph_node v)
 					else
 						distance[current.x+k][current.y+l]=distance[current.x][current.y]+1;
 					//cout << distance[current.x+k][current.y+l];
-					if(current.x+k == img.rows-1 && current.y+l == img.cols-1)
+					if(current.x+k == ROWS/2 && current.y+l == COLS-1)
 					{
-						return distance[img.rows-1][img.cols-1];
+						return distance[ROWS/2][COLS-1];
 					}
 					temp.x=current.x+k;
 					temp.y=current.y+l;
@@ -195,7 +196,56 @@ void approx_path(graph_node parent[ROWS][COLS], graph_node start, graph_node end
 
 int main()
 {	
-	/*namedWindow("Original Image",WINDOW_NORMAL);
+	// /*namedWindow("Original Image",WINDOW_NORMAL);
+	// img = imread("dataset/img1.jpg",0);
+	// imshow("Original Image",img);
+	// while(1)
+	// {
+	// 	int temp = waitKey(10);
+	// 	if(temp == 27) break;
+	// }*/
+
+	// graph_node start,end;
+	// start.x = 0;
+	// start.y = 0;
+	// end.x = ROWS-1;
+	// end.y = COLS-1;
+	// int dist[DATASET];
+	// int number = 0;
+	// //int number = 5468;
+	// /*int temp = BFS(parent,start);
+	// approx_path(parent,start,end);
+	// namedWindow("Final Path",WINDOW_NORMAL);
+	// imshow("Final Path",img);
+	// while(1)
+	// {
+	// 	int temp = waitKey(10);
+	// 	if(temp == 27) break;
+	// }
+	// return 0;*/
+	// while(number<DATASET)
+	// {
+	// 	graph_node parent[ROWS][COLS];
+	// 	stringstream ss;
+ //        //ss<<(DATASET-number);
+ //        ss<<number;
+ //        string s = "dataset/";
+ //        string s1 = "img";
+ //        string s2 = ss.str();
+ //        string s3 = ".jpg";
+ //        img = imread(s+s1+s2+s3,0);	
+ //        //cout << img.rows << endl;	
+	// 	dist[number]=BFS(parent,start);
+	// 	//cout << dist[ROWS*COLS-number] << endl;
+	// 	approx_path(parent,start,end);
+	// 	number++;
+	// 	printf("\n");
+	// }
+	// // print_path(parent,start,end);
+	// // imshow("chaljabhai",img);
+	// // waitKey(0);
+	// // return 0;
+/*namedWindow("Original Image",WINDOW_NORMAL);
 	img = imread("dataset/img1.jpg",0);
 	imshow("Original Image",img);
 	while(1)
@@ -205,16 +255,9 @@ int main()
 	}*/
 
 	graph_node start,end;
-
-	// printf("Input start vertex: ");
-	// scanf("%d",&start.x);
-	// scanf("%d",&start.y);
-	// printf("Input end vertex: ");
-	// scanf("%d",&end.x);
-	// scanf("%d",&end.y);
-	start.x = 0;
-	start.y = 0;
-	end.x = ROWS-1;
+	start.x = 10;
+	start.y = 30;
+	end.x = ROWS/2;
 	end.y = COLS-1;
 	int dist[DATASET];
 	int number = 0;
@@ -229,9 +272,11 @@ int main()
 		if(temp == 27) break;
 	}
 	return 0;*/
+	int x_cuts = 10;
+	int y_cuts = 15;
 	while(number<DATASET)
 	{
-		graph_node parent[ROWS][COLS];
+		
 		stringstream ss;
         //ss<<(DATASET-number);
         ss<<number;
@@ -239,13 +284,36 @@ int main()
         string s1 = "img";
         string s2 = ss.str();
         string s3 = ".jpg";
+        //cout << s+s1+s2+s3 << endl;
+        graph_node parent[ROWS][COLS];
         img = imread(s+s1+s2+s3,0);	
         //cout << img.rows << endl;	
-		dist[number]=BFS(parent,start);
-		//cout << dist[ROWS*COLS-number] << endl;
-		approx_path(parent,start,end);
-		number++;
-		printf("\n");
+        //for(int i = 0  ; i < x_cuts; i ++)
+        {
+        	//for ( int j = 0 ; j < y_cuts ; j++)
+        	{
+
+        		parent[ROWS][COLS] = {0};
+        		// start.x = i*(ROWS/x_cuts) + (ROWS/(2*x_cuts));
+        		// start.y = j*(COLS/y_cuts) + (COLS/(2*y_cuts));
+        		cout << start.x << start.y << endl;
+				dist[number]=BFS(parent,start);
+				//cout << dist[ROWS*COLS-number] << endl;
+				approx_path(parent,start,end);
+				//free(&parent);
+				printf("\n");
+				parent[ROWS][COLS] = {0};
+        		// start.x = i*(ROWS/x_cuts) + (ROWS/(2*x_cuts));
+        		// start.y = j*(COLS/y_cuts) + (COLS/(2*y_cuts));
+        		cout << start.x << start.y << endl;
+				dist[number]=BFS(parent,start);
+				//cout << dist[ROWS*COLS-number] << endl;
+				approx_path(parent,start,end);
+				//free(&parent);
+				printf("\n");
+        	}
+        }
+        number++;
 	}
 	// print_path(parent,start,end);
 	// imshow("chaljabhai",img);
