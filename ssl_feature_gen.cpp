@@ -17,7 +17,7 @@ int DBOX_RADIUS = (int)(1500.0*ROWS/SSL_FIELD_HEIGHT);	//40
 int DBOX_SIDE = (int)(750.0*ROWS/SSL_FIELD_HEIGHT);	//20
 #define BOT_RADIUS 10
 
-#define DATASET 10
+#define DATASET 100000
 #define DBOX_BOTS 3
 #define HALFLINE_BOTS 2
 float PI = 180.0/3.14159265;
@@ -108,6 +108,77 @@ Mat circle(Mat a, int i, int j, int r)
     return a;
 }
 
+Mat draw_field_lines(Mat img)
+{
+	for(int i=0; i<ROWS; i++)
+    {
+		if(i > ROWS/2 - DBOX_SIDE/2 - DBOX_RADIUS && i < ROWS/2 + DBOX_SIDE/2 + DBOX_RADIUS)
+		{
+			int j1, j2;
+			j1 = left_dbox_x(i) - 1;
+			j2 = right_dbox_x(i) - 1;
+			//printf("(%d,%d)---------------\n",j1,j2);
+			//if(j1<0 || j2<0) {printf("(%d,%d)\n%d\n",j1,j2,(int)(acos(23.0/27)*PI)); print=1;}
+			//else print=0;
+			img.at<uchar>(i,j1) = 150;
+			img.at<uchar>(i,j2) = 150;
+		}
+		
+		img.at<uchar>(i,COLS/2) = 150;
+    }
+
+    return img;
+}
+
+Mat random_dbox_bots(Mat img)
+{
+	int dbox_botPos_i[DBOX_BOTS];
+	dbox_botPos_i[0] = ROWS/2 - (int)((float)DBOX_SIDE*ERROR/2) - rand()%DBOX_RADIUS + BOT_RADIUS;
+	dbox_botPos_i[1] = ROWS/2 - (int)(DBOX_SIDE*ERROR/2) + rand()%((int)(DBOX_SIDE*ERROR - 2*BOT_RADIUS)) + BOT_RADIUS;
+	dbox_botPos_i[2] = ROWS/2 + (int)(DBOX_SIDE*ERROR/2) + rand()%DBOX_RADIUS - BOT_RADIUS;
+		
+	for(int i=0; i<DBOX_BOTS; i++)
+		img = circle(img,dbox_botPos_i[i],left_dbox_x(dbox_botPos_i[i])-1,BOT_RADIUS);
+
+	return img;
+}
+
+Mat defensive_dbox_bots(Mat img)
+{
+	int i = ROWS/2 - (int)(DBOX_SIDE*ERROR/2) + rand()%((int)(DBOX_SIDE*ERROR - 2*BOT_RADIUS)) + BOT_RADIUS;
+	int i1 = i - BOT_RADIUS;
+	int i2 = i + BOT_RADIUS;
+	img = circle(img,i1,DBOX_RADIUS,BOT_RADIUS);
+	img = circle(img,i2,DBOX_RADIUS,BOT_RADIUS);
+
+	i = rand()%(DBOX_RADIUS*2) - DBOX_RADIUS;
+	if(i < 0) i = ROWS/2 - (int)(DBOX_SIDE*ERROR/2) + i + BOT_RADIUS;
+	else i = ROWS/2 + (int)(DBOX_SIDE*ERROR/2) + i - BOT_RADIUS;
+	img = circle(img,i,left_dbox_x(i)-1,BOT_RADIUS);
+
+	return img;
+}
+
+Mat random_halfline_bots(Mat img)
+{
+	int halfline_botPos_i[HALFLINE_BOTS];
+	for(int i=0; i<HALFLINE_BOTS; i++)
+	{	    		
+		int flag;
+		do
+		{
+			flag = 1;
+			halfline_botPos_i[i] = BOT_RADIUS + rand()%(ROWS - 2*BOT_RADIUS);
+			for(int j=0; j<i; j++)
+		    	if(abs(halfline_botPos_i[j] - halfline_botPos_i[i]) < 2*BOT_RADIUS) flag=0;
+		}while(flag == 0);    		
+
+		img = circle(img,halfline_botPos_i[i],COLS/2,BOT_RADIUS);
+	}
+
+	return img;
+}
+
 int main()
 {
 	ofstream myfile;
@@ -117,56 +188,14 @@ int main()
 	{
 		stringstream ss;
         ss<<(count);
-        string img_name = "img" + ss.str() + ".jpg";	//20 60 45
+        string img_name = "defensive_dataset/img" + ss.str() + ".jpg";
         
         Mat img(ROWS,COLS,CV_8UC1,Scalar(0));
 
-        for(int i=0; i<ROWS; i++)
-        {
-    		if(i > ROWS/2 - DBOX_SIDE/2 - DBOX_RADIUS && i < ROWS/2 + DBOX_SIDE/2 + DBOX_RADIUS)
-    		{
-    			int j1, j2;
-    			j1 = left_dbox_x(i) - 1;
-    			j2 = right_dbox_x(i) - 1;
-    			//printf("(%d,%d)---------------\n",j1,j2);
-    			//if(j1<0 || j2<0) {printf("(%d,%d)\n%d\n",j1,j2,(int)(acos(23.0/27)*PI)); print=1;}
-    			//else print=0;
-    			img.at<uchar>(i,j1) = 150;
-    			img.at<uchar>(i,j2) = 150;
-    		}
-    		
-    		img.at<uchar>(i,COLS/2) = 150;
-        }
-
-    	int dbox_botPos_i[DBOX_BOTS];
-    	dbox_botPos_i[0] = ROWS/2 - (int)((float)DBOX_SIDE*ERROR/2) - rand()%DBOX_RADIUS + BOT_RADIUS;
-    	dbox_botPos_i[1] = ROWS/2 - (int)(DBOX_SIDE*ERROR/2) + rand()%((int)(DBOX_SIDE*ERROR - 2*BOT_RADIUS)) + BOT_RADIUS;
-    	dbox_botPos_i[2] = ROWS/2 + (int)(DBOX_SIDE*ERROR/2) + rand()%DBOX_RADIUS - BOT_RADIUS;
-    		
-    	for(int i=0; i<DBOX_BOTS; i++)
-    		img = circle(img,dbox_botPos_i[i],left_dbox_x(dbox_botPos_i[i])-1,BOT_RADIUS);
-
-    	int halfline_botPos_i[HALFLINE_BOTS];
-    	for(int i=0; i<HALFLINE_BOTS; i++)
-    	{	    		
-    		int flag;
-    		do
-    		{
-    			flag = 1;
-    			halfline_botPos_i[i] = BOT_RADIUS + rand()%(ROWS - 2*BOT_RADIUS);
-    			for(int j=0; j<i; j++)
-    		    	if(abs(halfline_botPos_i[j] - halfline_botPos_i[i]) < 2*BOT_RADIUS) flag=0;
-    		}while(flag==0);    		
-
-    		img = circle(img,halfline_botPos_i[i],COLS/2,BOT_RADIUS);
-    	}
-
-    	/*namedWindow("SHOW",WINDOW_NORMAL);
-    	if(count < 10)
-    	{
-    		imshow("SHOW",img);
-    		while(waitKey(10)!=27){}
-    	}*/
+    	//img = random_dbox_bots(img);
+    	img = defensive_dbox_bots(img);
+    	img = random_halfline_bots(img);
+    	
     	imwrite(img_name,img);
     }
 	return 0;
