@@ -130,7 +130,7 @@ Mat draw_field_lines(Mat img)
     return img;
 }
 
-Mat random_dbox_bots(Mat img)
+Mat random_dbox_bots(Mat img, ofstream *myfile)
 {
 	int dbox_botPos_i[DBOX_BOTS];
 	dbox_botPos_i[0] = ROWS/2 - (int)((float)DBOX_SIDE*ERROR/2) - rand()%DBOX_RADIUS + BOT_RADIUS;
@@ -138,12 +138,17 @@ Mat random_dbox_bots(Mat img)
 	dbox_botPos_i[2] = ROWS/2 + (int)(DBOX_SIDE*ERROR/2) + rand()%DBOX_RADIUS - BOT_RADIUS;
 		
 	for(int i=0; i<DBOX_BOTS; i++)
-		img = circle(img,dbox_botPos_i[i],left_dbox_x(dbox_botPos_i[i])-1,BOT_RADIUS);
+	{
+		int y = dbox_botPos_i[i];
+		int x = left_dbox_x(y) - 1;
+		img = circle(img,y,x,BOT_RADIUS);
+		*myfile << x << " " << y << " " ;
+	}
 
 	return img;
 }
 
-Mat defensive_dbox_bots(Mat img)
+Mat defensive_dbox_bots(Mat img, ofstream *myfile)
 {
 	int i = ROWS/2 - (int)(DBOX_SIDE*ERROR/2) + rand()%((int)(DBOX_SIDE*ERROR - 2*BOT_RADIUS)) + BOT_RADIUS;
 	int i1 = i - BOT_RADIUS;
@@ -151,15 +156,19 @@ Mat defensive_dbox_bots(Mat img)
 	img = circle(img,i1,DBOX_RADIUS,BOT_RADIUS);
 	img = circle(img,i2,DBOX_RADIUS,BOT_RADIUS);
 
+	*myfile << DBOX_RADIUS << " " << i1 << " " << DBOX_RADIUS << " " << i2 << " ";
+
 	i = rand()%(DBOX_RADIUS*2) - DBOX_RADIUS;
 	if(i < 0) i = ROWS/2 - (int)(DBOX_SIDE*ERROR/2) + i + BOT_RADIUS;
 	else i = ROWS/2 + (int)(DBOX_SIDE*ERROR/2) + i - BOT_RADIUS;
 	img = circle(img,i,left_dbox_x(i)-1,BOT_RADIUS);
 
+	*myfile << left_dbox_x(i)-1 << " " << i << " ";
+
 	return img;
 }
 
-Mat random_halfline_bots(Mat img)
+Mat random_halfline_bots(Mat img, ofstream *myfile)
 {
 	int halfline_botPos_i[HALFLINE_BOTS];
 	for(int i=0; i<HALFLINE_BOTS; i++)
@@ -174,7 +183,11 @@ Mat random_halfline_bots(Mat img)
 		}while(flag == 0);    		
 
 		img = circle(img,halfline_botPos_i[i],COLS/2,BOT_RADIUS);
+
+		*myfile << halfline_botPos_i[i] << " ";
 	}
+
+	*myfile << endl;
 
 	return img;
 }
@@ -192,9 +205,9 @@ int main()
         
         Mat img(ROWS,COLS,CV_8UC1,Scalar(0));
 
-    	//img = random_dbox_bots(img);
-    	img = defensive_dbox_bots(img);
-    	img = random_halfline_bots(img);
+    	//img = random_dbox_bots(img,myfile);
+    	img = defensive_dbox_bots(img,&myfile);
+    	img = random_halfline_bots(img,&myfile);
     	
     	imwrite(img_name,img);
     }
