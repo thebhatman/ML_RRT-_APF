@@ -12,7 +12,7 @@ We generated 1,00,000 images with random obstacles.They can be accessed at this 
 https://drive.google.com/open?id=1_RFMAEEHSNluhC_CLTgPwLQ8VW1Pq-zF
 
 
-![alt_text](https://github.com/Snehal-Reddy/ML_RRT-_APF/blob/master/images/img0.jpg)  
+![alt_text](https://github.com/Snehal-Reddy/DL_RRT_Star_APF/blob/master/Research%20Paper/img9.jpg)  
 
 We then used BFS and Dijkstra to calculate actual shortest path (since it was unweighted).
 
