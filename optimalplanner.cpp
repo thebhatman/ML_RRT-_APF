@@ -102,10 +102,11 @@ int BFS(graph_node parent[ROWS][COLS], graph_node v)
 	parent[v.x][v.y].x=-1;
 	parent[v.x][v.y].y=-1;
 	//printf("\nBFS Traversal:");
+	// cout << img.rows << " " << img.cols << endl;	
 	while(!isempty(qP))
 	{
 		current=dequeue(qP);
-		cout << current.x << ' ' << current.y << endl;
+		//cout << current.x << " " << current.y << endl;
 		for(k=-1;k<=1;k++)
 			for(l=-1;l<=1;l++)
 			{
@@ -121,9 +122,10 @@ int BFS(graph_node parent[ROWS][COLS], graph_node v)
 					else
 						distance[current.x+k][current.y+l]=distance[current.x][current.y]+1;
 					//cout << distance[current.x+k][current.y+l];
-					if(current.x+k == ROWS/2 && current.y+l == COLS-1)
+					if(current.x+k == img.rows-1 && current.y+l == img.cols-1)
 					{
-						return distance[ROWS/2][COLS-1];
+						cout << current.x << " " << current.y << endl;
+						return distance[img.rows-1][img.cols-1];
 					}
 					temp.x=current.x+k;
 					temp.y=current.y+l;
@@ -154,16 +156,18 @@ void print_path(graph_node parent[ROWS][COLS], graph_node start, graph_node end)
 
 void approx_path(graph_node parent[ROWS][COLS], graph_node start, graph_node end)
 {
+	cout << "Ap" << endl;
 	int required_path_points = 50;
 	int existing_path_points=0;
 	graph_node temp=end;
+	//cout << parent[temp.x][temp.y].x << " " << parent[temp.x][temp.y].y;
 	while(parent[temp.x][temp.y].x!=-1 && parent[temp.x][temp.y].y!=-1)
 	{
 		temp = parent[temp.x][temp.y];
 		existing_path_points++;
 	}
 	existing_path_points++;	
-	//cout<<existing_path_points<<endl<<required_path_points<<endl;
+	cout<<existing_path_points<<" "<<required_path_points<<endl;
 	int	approx_step;
 	graph_node approx_parent[ROWS][COLS];
 	graph_node u = end, v = end;
@@ -258,7 +262,7 @@ int main()
 	start.x = 10;
 	start.y = 30;
 	end.x = ROWS/2;
-	end.y = COLS-1;
+	end.y = 0;
 	int dist[DATASET];
 	int number = 0;
 	//int number = 5468;
@@ -279,12 +283,12 @@ int main()
 		
 		stringstream ss;
         //ss<<(DATASET-number);
-        ss<<number;
+        ss<<2;
         string s = "dataset/";
         string s1 = "img";
         string s2 = ss.str();
         string s3 = ".jpg";
-        //cout << s+s1+s2+s3 << endl;
+        cout << s+s1+s2+s3 << endl;
         graph_node parent[ROWS][COLS];
         img = imread(s+s1+s2+s3,0);	
         //cout << img.rows << endl;	
@@ -293,7 +297,7 @@ int main()
         	//for ( int j = 0 ; j < y_cuts ; j++)
         	{
 
-        		parent[ROWS][COLS] = {0};
+        		parent[ROWS][COLS] = {-1};
         		// start.x = i*(ROWS/x_cuts) + (ROWS/(2*x_cuts));
         		// start.y = j*(COLS/y_cuts) + (COLS/(2*y_cuts));
         		cout << start.x << start.y << endl;
@@ -302,15 +306,18 @@ int main()
 				approx_path(parent,start,end);
 				//free(&parent);
 				printf("\n");
-				parent[ROWS][COLS] = {0};
-        		// start.x = i*(ROWS/x_cuts) + (ROWS/(2*x_cuts));
-        		// start.y = j*(COLS/y_cuts) + (COLS/(2*y_cuts));
-        		cout << start.x << start.y << endl;
-				dist[number]=BFS(parent,start);
-				//cout << dist[ROWS*COLS-number] << endl;
-				approx_path(parent,start,end);
-				//free(&parent);
-				printf("\n");
+				namedWindow("Original Image",WINDOW_NORMAL);
+				imshow("Original Image",img);
+				waitKey(0);
+				// parent[ROWS][COLS] = {0};
+    //     		// start.x = i*(ROWS/x_cuts) + (ROWS/(2*x_cuts));
+    //     		// start.y = j*(COLS/y_cuts) + (COLS/(2*y_cuts));
+    //     		cout << start.x << start.y << endl;
+				// dist[number]=BFS(parent,start);
+				// //cout << dist[ROWS*COLS-number] << endl;
+				// approx_path(parent,start,end);
+				// //free(&parent);
+				// printf("\n");
         	}
         }
         number++;

@@ -28,13 +28,13 @@
 % an abbreviated paper title here
 %
 \author{
-*YET TO BE PUBLISHED \inst{*} \\Snehal Reddy Koukuntla\inst{*}, Manjunath Bhat\inst{*}, Shamin Aggarwal \inst{*} and Rajat Kumar Jenamani}
+*YET TO BE PUBLISHED \inst{*} \\Snehal Reddy Koukuntla\inst{*}, Manjunath Bhat\inst{*} and Shamin Aggarwal \inst{*} }
 %
 % First names are abbreviated in the running head.
 % If there are more than two authors, 'et al.' is used.
 %
 \institute{Indian Institute of Technology Kharagpur, India\\
-\email{ksnehalreddy@iitkgp.ac.in, manjunathbhat9920@iitkgp.ac.in, shamin1998@iitkgp.ac.in,rajatkj11@gmail.com}}
+\email{ksnehalreddy@iitkgp.ac.in, manjunathbhat9920@iitkgp.ac.in, shamin1998@iitkgp.ac.in}}
 %
 \maketitle              % typeset the header of the contribution
 %
@@ -170,7 +170,14 @@ Potential Field (APF) introduced in \cite{potential}.  A lot of research has bee
 
 \section{\centering{Algorithm}}
 \vspace{-1mm}
-The previous works describe various ways in which the RRTs have been modified to improve the optimality, speed and dynamism of path generation. The potential piloted RRT* promises more optimal paths,but is not feasible as it has sensitive parameters to be tuned, the change it which can lead to drastic changes in the resultant path and those parameters have different values on different parts on the field.
+The previous works describe various ways in which the RRTs have been modified to improve the optimality, speed and dynamism of path generation. The potential piloted RRT* promises more optimal paths,but is not feasible as the potential parameters have different values at different parts if the field. These parameters are also very sensitive and the change in them can lead to drastic changes in the path.
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.8]{img9.jpg}}
+    \caption{The field we considered for testing the algorithm} \label{fig1}
+\end{center}
+\end{figure}
 
 \begin{figure}
 \begin{center}
@@ -178,6 +185,9 @@ The previous works describe various ways in which the RRTs have been modified to
     \caption{(a) The graph of superimposition of potential and frequency. (b) Straight line path is taken as cost in other planners marked in grey; actual path taken by our planner marked in black. The black patches mark infinity.} \label{fig1}
 \end{center}
 \end{figure}
+
+\subsection{Field Area:}
+For testing and running this algorithm, we considered our obstacles and path area similar to that of Small Sized League, RoboCup, where the bots were considered as obstacles and rest of the field was our path area. We considered three opponent bots to be guarding the goal in the opponent D-box and two other bots near the half-field line.
 
 \subsection{Potential field:}
 Electrostatic field is a very  coarse-grained approximation of the potential field generated in the field. It is clearly evident that the destination should made to act like a positive charge and attract the tree to grow towards it. But since the obstacles should be avoided and hence they should be made to act like negative charges and repel the tree. At every point $x$ in the space, the potential is calculated for a particular charge as $\text{V_{i}}=\frac{\text{kQ_{i}}}{\text{r_{i}}}$ where $Q_{i}$ is the magnitude of the $i^{th}$ point charge (obstacle ), and $r_{i}$ is the distance of the point $x$ from it. The net potential at a point is given by :
@@ -206,7 +216,12 @@ To find the ideal constants of potential field , we first divided the field into
 Let the magnitude of net repulsive field be $k\sum_{i=1}^{n}\frac{\text{Q_{i}}}{\text{r_{i}}}$ and the magnitude of attractive field be $\frac{\text{Q^\prime}}{\text{r^\prime}}$
 
 Let the angle between repulsive field vector and the ideal vector obtained from the ideal path be $\theta$ and let the angle between attractive field and the ideal vector be $\alpha$.
-
+\begin{figure}
+\begin{center}
+\includegraphics[scale=1.1]{Drawing(1).png} 
+    \caption{Vector representation of fields} \label{fig1}
+\end{center}
+\end{figure}
 \vspace{4mm}
 
 $k\sum_{i=1}^{n}\frac{\text{Q_{i}}}{\text{r_{i}}}{sin{\theta}}  =  \frac{\text{Q^\prime}}{\text{r^\prime}}{sin{\alpha}}$
@@ -222,7 +237,7 @@ An example is shown in the figure below (Fig 3).
  \vspace{5mm}
 
 \subsection{Training:}
-The position of the obstacle is an important determinant of the RRT* Tree. So is the area of the obstacle. So we took the centres of the each obstacle blob and the total area of the obstacles as the features of the neural network. We designed the cost function by comparing the predicted path after an epoch and the ideal path by comparing the path coordinate lists using mean square error. With this custom error function we built a neural network with the help of Keras. We had two hidden layers. We used 5 fold cross validation to improve the neural network. We also made use Adam's optimizer. Using this we predicted the potential function. We then used the potential function thus predicted to run an RRT* APF tree and an example is shown in Fig. 3.
+The position of the obstacle is an important determinant of the RRT* Tree. So is the area of the obstacle along with positions of the source and the destinations. So we took the centres of the each obstacle blob, the area of the obstacles and the source and destination coordinates as the features of our neural network. We also fed the ideal potential functions which we acquired using the procedure explained in section 3.2, into the neural network. We used three hidden layers and used k-fold cross validation to tune the hyper-parameters. We also used Adam's optimiser. We then used the potential function thus predicted by the neural network to run an RRT* APF tree and an example is shown in Fig. 3.
 \vspace{10mm}
 \begin{figure}
 \begin{center}
