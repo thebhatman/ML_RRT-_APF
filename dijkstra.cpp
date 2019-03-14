@@ -31,8 +31,8 @@ graph_node minDistance(float dist[ROWS][COLS], int sptSet[ROWS][COLS])
    // Initialize min value 
    float min = INT_MAX; 
    graph_node node;
-   for(int i=0;i<ROWS;i++)
-   		for(int j=0;j<COLS;j++)
+   for(int i=0;i<ROWS;i+=10)
+   		for(int j=0;j<COLS;j+=10)
      		if (sptSet[i][j] == 0 && dist[i][j] <= min)
      		{ 
          		min = dist[i][j];
@@ -78,68 +78,68 @@ void dijkstra(graph_node start, graph_node end, graph_node parent[ROWS][COLS])
 		}
 		sptSet[node.x][node.y] = 1;
 		//top 
-		if (isvalid(X-1,Y) && !sptSet[X-1][Y] && (dist[X][Y]+1 < dist[X-1][Y]))
+		if (isvalid(X-10,Y) && !sptSet[X-10][Y] && (dist[X][Y]+10 < dist[X-10][Y]))
 		{ 
 			//cout<<"TRUE1"<<endl;
-		    dist[X-1][Y] = dist[X][Y]+1;
-		    parent[X-1][Y].x=X;
-		    parent[X-1][Y].y=Y;
+		    dist[X-10][Y] = dist[X][Y]+10;
+		    parent[X-10][Y].x=X;
+		    parent[X-10][Y].y=Y;
 		}
 		//top-left
-		if (isvalid(X-1,Y-1) && !sptSet[X-1][Y-1] && (dist[X][Y]+1 < dist[X-1][Y-1])) 
+		if (isvalid(X-10,Y-10) && !sptSet[X-10][Y-10] && (dist[X][Y]+10*sqrt(2) < dist[X-10][Y-10])) 
 		{
 			//cout<<"TRUE1"<<endl;
-		    dist[X-1][Y-1] = dist[X][Y]+sqrt(2);
-		    parent[X-1][Y-1].x=X;
-		    parent[X-1][Y-1].y=Y;
+		    dist[X-10][Y-10] = dist[X][Y]+10*sqrt(2);
+		    parent[X-10][Y-10].x=X;
+		    parent[X-10][Y-10].y=Y;
 		}
 		//left
-		if (isvalid(X,Y-1) && !sptSet[X][Y-1] && (dist[X][Y]+1 < dist[X][Y-1]))
+		if (isvalid(X,Y-10) && !sptSet[X][Y-10] && (dist[X][Y]+10 < dist[X][Y-10]))
 		{ 
 			//cout<<"TRUE1"<<endl;
-		    dist[X][Y-1] = dist[X][Y]+1;
-		    parent[X][Y-1].x=X;
-		    parent[X][Y-1].y=Y;
+		    dist[X][Y-10] = dist[X][Y]+10;
+		    parent[X][Y-10].x=X;
+		    parent[X][Y-10].y=Y;
 		}
 		//bottom-left
-		if (isvalid(X+1,Y-1) && !sptSet[X+1][Y-1] && (dist[X][Y]+1 < dist[X+1][Y-1])) 
+		if (isvalid(X+10,Y-10) && !sptSet[X+10][Y-10] && (dist[X][Y]+10*sqrt(2) < dist[X+10][Y-10])) 
 		{
 			//cout<<"TRUE1"<<endl;
-		    dist[X+1][Y-1] = dist[X][Y]+sqrt(2);
-		    parent[X+1][Y-1].x=X;
-		    parent[X+1][Y-1].y=Y;
+		    dist[X+10][Y-10] = dist[X][Y]+10*sqrt(2);
+		    parent[X+10][Y-10].x=X;
+		    parent[X+10][Y-10].y=Y;
 		}
 		//bottom
-		if (isvalid(X+1,Y) && !sptSet[X+1][Y] && (dist[X][Y]+1 < dist[X+1][Y]))
+		if (isvalid(X+10,Y) && !sptSet[X+10][Y] && (dist[X][Y]+10 < dist[X+10][Y]))
 		{ 
 			//cout<<"TRUE1"<<endl;
-		    dist[X+1][Y] = dist[X][Y]+1;
-		    parent[X+1][Y].x=X;
-		    parent[X+1][Y].y=Y;
+		    dist[X+10][Y] = dist[X][Y]+10;
+		    parent[X+10][Y].x=X;
+		    parent[X+10][Y].y=Y;
 		}
 		//bottom-right
-		if (isvalid(X+1,Y+1) && !sptSet[X+1][Y+1] && (dist[X][Y]+1 < dist[X+1][Y+1]))
+		if (isvalid(X+10,Y+10) && !sptSet[X+10][Y+10] && (dist[X][Y]+10*sqrt(2) < dist[X+10][Y+10]))
 		{ 
 			//cout<<"TRUE1"<<endl;
-		    dist[X+1][Y+1] = dist[X][Y]+sqrt(2);
-		    parent[X+1][Y+1].x=X;
-		    parent[X+1][Y+1].y=Y;
+		    dist[X+10][Y+10] = dist[X][Y]+10*sqrt(2);
+		    parent[X+10][Y+10].x=X;
+		    parent[X+10][Y+10].y=Y;
 		}
 		//right
-		if (isvalid(X,Y+1) && !sptSet[X][Y+1] && (dist[X][Y]+1 < dist[X][Y+1]))
+		if (isvalid(X,Y+10) && !sptSet[X][Y+10] && (dist[X][Y]+10 < dist[X][Y+10]))
 		{ 
 			//cout<<"TRUE1"<<endl;
-		    dist[X][Y+1] = dist[X][Y]+1;
-		    parent[X][Y+1].x=X;
-		    parent[X][Y+1].y=Y;
+		    dist[X][Y+10] = dist[X][Y]+10;
+		    parent[X][Y+10].x=X;
+		    parent[X][Y+10].y=Y;
 		}
 		//top-right
-		if (isvalid(X-1,Y+1) && !sptSet[X-1][Y+1] && (dist[X][Y]+1 < dist[X-1][Y+1]))
+		if (isvalid(X-10,Y+10) && !sptSet[X-10][Y+10] && (dist[X][Y]+10*sqrt(2) < dist[X-10][Y+10]))
 		{ 
 			//cout<<"TRUE1"<<endl;
-		    dist[X-1][Y+1] = dist[X][Y]+sqrt(2);
-		    parent[X-1][Y+1].x=X;
-		    parent[X-1][Y+1].y=Y;
+		    dist[X-10][Y+10] = dist[X][Y]+10*sqrt(2);
+		    parent[X-10][Y+10].x=X;
+		    parent[X-10][Y+10].y=Y;
 		}
      } 
    
@@ -167,6 +167,7 @@ void print_path(graph_node parent[ROWS][COLS], graph_node start, graph_node end)
 		print_path(parent,start,parent[end.x][end.y]);
 		printf(" ( %d , %d ) ",end.x,end.y);
 		img.at<uchar>(end.x,end.y)=160;
+		line(img,Point(end.y,end.x),Point(parent[end.x][end.y].y,parent[end.x][end.y].x),(255),2);
 	}
 }
 int main()
