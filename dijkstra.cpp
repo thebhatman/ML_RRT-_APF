@@ -73,7 +73,7 @@ void dijkstra(graph_node start, graph_node end, graph_node parent[ROWS][COLS])
 		//cout<<"k";
 		if(node.x==end.x && node.y==end.y)
 		{
-			cout<<"breaking";
+			//cout<<"breaking";
 			break; 
 		}
 		sptSet[node.x][node.y] = 1;
@@ -153,7 +153,7 @@ void print_path(graph_node parent[ROWS][COLS], graph_node start, graph_node end)
 	if((start.x == end.x) && (start.y == end.y))
 	{
 		//cout<<"INTHIS";
-		img.at<uchar>(end.x,end.y)=160;
+		//img.at<uchar>(end.x,end.y)=160;
 		printf(" ( %d , %d ) ",start.x,start.y);
 	}
 	else if(parent[end.x][end.y].x==-1 && parent[end.x][end.y].y==-1)
@@ -166,23 +166,33 @@ void print_path(graph_node parent[ROWS][COLS], graph_node start, graph_node end)
 		//cout<<"INWHAT";
 		print_path(parent,start,parent[end.x][end.y]);
 		printf(" ( %d , %d ) ",end.x,end.y);
-		img.at<uchar>(end.x,end.y)=160;
-		line(img,Point(end.y,end.x),Point(parent[end.x][end.y].y,parent[end.x][end.y].x),(255),2);
+		//img.at<uchar>(end.x,end.y)=160;
+		//line(img,Point(end.y,end.x),Point(parent[end.x][end.y].y,parent[end.x][end.y].x),(255),2);
 	}
 }
 int main()
 {	
-	cout<<img.at<uchar>(100,100);
+	//cout<<img.at<uchar>(100,100);
 	graph_node start,end;
 	graph_node parent[ROWS][COLS];
-	start.x = 100;
-	start.y = 250;
+	start.x = 0;
+	start.y = 0;
 	end.x = ROWS/2;
 	end.y = 0;
-	dijkstra(start,end,parent);
-	print_path(parent,start,end);
-	namedWindow("dijkstra_path",WINDOW_NORMAL);
-	imshow("dijkstra_path",img);
-	waitKey(0);
+	//namedWindow("dijkstra_path",WINDOW_NORMAL);
+	for(int i=0;i<4;i++)
+	{
+		start.y=0;
+		for(int j=0;j<3;j++)
+		{
+			dijkstra(start,end,parent);
+			print_path(parent,start,end);
+			cout<<endl;
+			//imshow("dijkstra_path",img);
+			//waitKey(100);
+			start.y+=100;
+		} 
+		start.x+=50;
+	}
 	
 }
