@@ -8,7 +8,8 @@ using namespace std;
 using namespace cv;
 #define ROWS 200
 #define COLS 300
-Mat img = imread("Sample_images/img0.jpg",0);
+#define DATASET 10
+Mat img;
 struct graph_node
 {
 	int x,y;
@@ -154,7 +155,7 @@ void print_path(graph_node parent[ROWS][COLS], graph_node start, graph_node end)
 	{
 		//cout<<"INTHIS";
 		//img.at<uchar>(end.x,end.y)=160;
-		printf(" ( %d , %d ) ",start.x,start.y);
+		printf("( %d , %d ) ",start.x,start.y);
 	}
 	else if(parent[end.x][end.y].x==-1 && parent[end.x][end.y].y==-1)
 	{
@@ -165,7 +166,7 @@ void print_path(graph_node parent[ROWS][COLS], graph_node start, graph_node end)
 	{
 		//cout<<"INWHAT";
 		print_path(parent,start,parent[end.x][end.y]);
-		printf(" ( %d , %d ) ",end.x,end.y);
+		printf("( %d , %d ) ",end.x,end.y);
 		//img.at<uchar>(end.x,end.y)=160;
 		//line(img,Point(end.y,end.x),Point(parent[end.x][end.y].y,parent[end.x][end.y].x),(255),2);
 	}
@@ -180,19 +181,42 @@ int main()
 	end.x = ROWS/2;
 	end.y = 0;
 	//namedWindow("dijkstra_path",WINDOW_NORMAL);
-	for(int i=0;i<4;i++)
+	// int x_cuts = 10;
+	// int y_cuts = 15;
+	int number = 1;
+	while(number<DATASET)
 	{
-		start.y=0;
-		for(int j=0;j<3;j++)
+		
+		stringstream ss;
+        ss<<(number);
+        //ss<<2;
+        string s = "Sample_images/";
+        string s1 = "img";
+        string s2 = ss.str();
+        string s3 = ".jpg";
+        //cout << s+s1+s2+s3 << endl;
+        graph_node parent[ROWS][COLS];
+        start.x = 0;
+		start.y = 0;
+		end.x = ROWS/2;
+		end.y = 0;
+        img = imread(s+s1+s2+s3,0);
+        //cout << img.at<uchar>(100,100) << endl;
+		for(int i=0;i<4;i++)
 		{
-			dijkstra(start,end,parent);
-			print_path(parent,start,end);
-			cout<<endl;
-			//imshow("dijkstra_path",img);
-			//waitKey(100);
-			start.y+=100;
-		} 
-		start.x+=50;
+			start.y=0;
+			for(int j=0;j<3;j++)
+			{
+				dijkstra(start,end,parent);
+				print_path(parent,start,end);
+				cout<<endl;
+				//imshow("dijkstra_path",img);
+				//waitKey(100);
+				start.y+=100;
+			} 
+			start.x+=50;
+		}
+		number++;
 	}
 	
 }
