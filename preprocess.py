@@ -4,19 +4,31 @@ import sys
 
 DATA = 50000
 F_no = 8
-G_no = 150
+G_no = 12
 
-def potential(filename):
+def feautures_ssl(filename,size):
+	array = np.zeros(shape = (size,F_no))
+	obs = open(filename,"r")
+	i = 0
+	for line in obs:
+		lineSplit = line.split(" ")
+		#lineSplit = lineSplit[:-1]
+		for cor in range(F_no):
+			array[i][cor] = (lineSplit[(cor)])
+		i+=1
+	return array
+
+def potential(filename,size):
 	pot = open(filename,"r")
 	array = np.zeros(shape = (size,G_no))
 	i = 0
-	for line in distance:
+	for line in pot:
 		lineSplit=line.split(" ")
-		for k in lineSplit:
-			array[i].append(int(k))
+		for k in range(G_no):
+			array[i][k]=(lineSplit[k])
 		i+=1
 
-	return pot
+	return array
 
 def func_num(filename):
 	num = open(filename,"r")
@@ -45,19 +57,7 @@ def features(filename):
 		area.append(lineSplit[2])
 	return area
 	
-def all_circles(filename,size):
 
-	array = np.zeros(shape = (size,F_no))
-	obs = open(filename,"r")
-	i = 0
-	for line in obs:
-		lineSplit = line.split(" ")
-		#lineSplit = lineSplit[:-1]
-		for cor in line:
-			array[i].append(int(cor))
-		i+=1
-
-	return array
 		
 
 #all_circles("data/obst.txt")
