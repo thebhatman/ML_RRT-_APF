@@ -10,9 +10,9 @@ using namespace cv;
 using namespace std;
 
 #define SSL_FIELD_WIDTH 6000
-#define SSL_FIELD_HEIGHT 6000
-#define ROWS 400
-#define COLS 400
+#define SSL_FIELD_HEIGHT 4500
+#define ROWS 200
+#define COLS 300
 int DBOX_RADIUS = (int)(1000.0*ROWS/SSL_FIELD_HEIGHT);	//66
 int DBOX_SIDE = (int)(500.0*ROWS/SSL_FIELD_HEIGHT);	//33
 #define BOT_RADIUS 15

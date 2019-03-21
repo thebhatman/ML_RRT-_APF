@@ -8,7 +8,7 @@ using namespace std;
 using namespace cv;
 #define ROWS 200
 #define COLS 300
-#define DATASET 10
+#define DATASET 100000
 Mat img;
 struct graph_node
 {
@@ -155,7 +155,7 @@ void print_path(graph_node parent[ROWS][COLS], graph_node start, graph_node end)
 	{
 		//cout<<"INTHIS";
 		//img.at<uchar>(end.x,end.y)=160;
-		printf("( %d , %d ) ",start.x,start.y);
+		printf("(%d,%d) ",start.x,start.y);
 	}
 	else if(parent[end.x][end.y].x==-1 && parent[end.x][end.y].y==-1)
 	{
@@ -166,7 +166,7 @@ void print_path(graph_node parent[ROWS][COLS], graph_node start, graph_node end)
 	{
 		//cout<<"INWHAT";
 		print_path(parent,start,parent[end.x][end.y]);
-		printf("( %d , %d ) ",end.x,end.y);
+		printf("(%d,%d) ",end.x,end.y);
 		//img.at<uchar>(end.x,end.y)=160;
 		//line(img,Point(end.y,end.x),Point(parent[end.x][end.y].y,parent[end.x][end.y].x),(255),2);
 	}
@@ -183,14 +183,14 @@ int main()
 	//namedWindow("dijkstra_path",WINDOW_NORMAL);
 	// int x_cuts = 10;
 	// int y_cuts = 15;
-	int number = 1;
+	int number = 0;
 	while(number<DATASET)
 	{
 		
 		stringstream ss;
         ss<<(number);
         //ss<<2;
-        string s = "Sample_images/";
+        string s = "defensive_dataset/";
         string s1 = "img";
         string s2 = ss.str();
         string s3 = ".jpg";
@@ -201,12 +201,14 @@ int main()
 		end.x = ROWS/2;
 		end.y = 0;
         img = imread(s+s1+s2+s3,0);
+
         //cout << img.at<uchar>(100,100) << endl;
 		for(int i=0;i<4;i++)
 		{
 			start.y=0;
 			for(int j=0;j<3;j++)
 			{
+				//cout << img.rows <<   ' ' << img.cols << endl;
 				dijkstra(start,end,parent);
 				print_path(parent,start,end);
 				cout<<endl;
