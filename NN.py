@@ -1,6 +1,8 @@
 import numpy as np 
 import math
 import keras
+from keras.layers import Activation, Dense
+from keras.models import Sequential
 import preprocess
 
 size = 100000
@@ -45,6 +47,6 @@ model.add(Dense(10, activation='relu'))
 model.add(Dense(12, activation='sigmoid'))
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-model.fit(X, Y, epochs=150, batch_size=10)
-scores = model.evaluate(X, Y)
+model.fit(X_train, Y_train, epochs=150, batch_size=10)
+scores = model.evaluate(X_test, Y_test)
 print("\n%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
