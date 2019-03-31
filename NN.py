@@ -5,6 +5,7 @@ import keras
 from sklearn.preprocessing import scale
 from keras.layers import Activation, Dense
 from keras.models import Sequential
+from keras import regularizers
 from keras.optimizers import SGD
 import preprocess
 
@@ -28,7 +29,7 @@ features = pd.DataFrame(features)
 
 for i in range(no_feat):
 	# print(i)
-	features.loc[0:size, i] = (scale(features.loc[0:size, i]))*100000
+	features.loc[0:size, i] = (scale(features.loc[0:size, i]))*1000000	
 
 
 X_train = np.zeros(shape = (train_size, no_feat))
@@ -60,14 +61,18 @@ print(Y_test[0])
 
 #neural net
 model = Sequential()
-model.add(Dense(10, input_dim=8, activation='relu'))
-model.add(Dense(10, activation='relu'))
-model.add(Dense(12, activation='sigmoid'))
+model.add(Dense(10, input_dim=8, activation='relu',kernel_regularizer=regularizers.l2(0.01)))
+model.add(Dense(10, activation='relu',kernel_regularizer=regularizers.l2(0.01)))
+model.add(Dense(12, activation='sigmoid'	))
 sgd = SGD(lr=0.001, momentum=0.9, decay=0.0, nesterov=False)
 model.compile(loss='binary_crossentropy', optimizer=sgd, metrics=['accuracy'])
 
 model.fit(X_train, Y_train, epochs=1, batch_size=128)
 scores = model.evaluate(X_test, Y_test)
-Y = model.predict(X_test)
-# print("\n%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
-print(Y)
+# Y = model.predict(X_test)
+# # print("\n%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
+# print(Y)
+
+for layer in model.layers:
+    weights = layer.get_weights()
+print(weights[1])
