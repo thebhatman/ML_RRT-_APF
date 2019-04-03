@@ -166,7 +166,7 @@ int main(int argc, char** argv)
 	//cout<<"Enter the co-ordinates of the source"<<endl;
 	//cin>>source.curr.x>>source.curr.y;
 	source.curr.x = COLS*3/4;
-	source.curr.y = ROWS*3/4;
+	source.curr.y = ROWS*1/2;
 	int o = source.curr.x;
 	int p = source.curr.y;
 	//if(a.at<uchar>(p,o)>150) {cout<<"source is on the obstacle\n"; return 0;}
@@ -472,6 +472,7 @@ int main(int argc, char** argv)
 		}
 
 	}
+	imwrite("final_tree.png",a);
     //imshow("star_apf",a);
     namedWindow("Final_apf", WINDOW_NORMAL);
 	vector<node> path_points;
@@ -537,8 +538,9 @@ int main(int argc, char** argv)
 	//ofs.open("test.txt", std::ofstream::out | std::ofstream::trunc);
 	//cout<<endl<<n_num;
 	myfile.close();
-
+	imwrite("final_path.png",b);
 	imshow("Final_apf", b);
+
 	while(waitKey(0)!=27){}
 	//cout << stop - start << endl;
 	return 0;
