@@ -115,14 +115,14 @@ int index(node point)
 
 int main(int argc, char** argv)
 {
-	int learning_parameter[GRID];
+	float learning_parameter[GRID];
 	for(int i=0; i<GRID; i++)
 	{
-		int n;
-		scanf("%d",&n);
-		learning_parameter[i];
+		float n;
+		scanf("%f",&n);
+		learning_parameter[i] = n;
 	}
-    string s0 = "dataset/";
+    string s0 = "defensive_dataset/";
     string s1 = "img";
     int img_num;
     scanf("%d",&img_num);
@@ -165,16 +165,16 @@ int main(int argc, char** argv)
 	node source, dest;
 	//cout<<"Enter the co-ordinates of the source"<<endl;
 	//cin>>source.curr.x>>source.curr.y;
-	source.curr.x = 0;
-	source.curr.y = 0;
+	source.curr.x = COLS*3/4;
+	source.curr.y = ROWS*3/4;
 	int o = source.curr.x;
 	int p = source.curr.y;
 	//if(a.at<uchar>(p,o)>150) {cout<<"source is on the obstacle\n"; return 0;}
 	a.at<uchar>(p,o) = 200;
 	//111cout<<"Enter the co-ordinates of the destination1: "<<endl;
 	//cin>>dest.curr.x>>dest.curr.y;
-	dest.curr.x = COLS - 1;
-	dest.curr.y = ROWS - 1;
+	dest.curr.x = 10;
+	dest.curr.y = ROWS/2;
 	o = dest.curr.x;
 	p = dest.curr.y;
 	//if(a.at<uchar>(p,o)>150) {cout<<"destination is on the obstacle\n"; return 0;}
@@ -193,6 +193,7 @@ int main(int argc, char** argv)
 	curr_tree_size = srctree.size();
 	namedWindow("star_apf",WINDOW_NORMAL);
     imshow("star_apf",a);
+    while(waitKey(10)!=27){}
 	while(1)
 	{
 		node qnew;
@@ -457,8 +458,8 @@ int main(int argc, char** argv)
 
 		}
 
-		//imshow("star_apf",a);
-		//waitKey(2);
+		imshow("star_apf",a);
+		waitKey(2);
 		if(dist(qnew, dest) <= 2*max_step_size)
 		{
 			dest.mommy.curr.x = qnew.curr.x; dest.mommy.curr.y = qnew.curr.y;
@@ -472,7 +473,7 @@ int main(int argc, char** argv)
 
 	}
     //imshow("star_apf",a);
-    //namedWindow("Final_apf", WINDOW_NORMAL);
+    namedWindow("Final_apf", WINDOW_NORMAL);
 	vector<node> path_points;
 	node mover;
 	int required_path_points = 51;
@@ -537,8 +538,8 @@ int main(int argc, char** argv)
 	//cout<<endl<<n_num;
 	myfile.close();
 
-	//imshow("Final_apf", b);
-	//while(waitKey(0)!=27){}2
+	imshow("Final_apf", b);
+	while(waitKey(0)!=27){}
 	//cout << stop - start << endl;
 	return 0;
 }
