@@ -11,6 +11,13 @@
 #include <vector>
 #include <queue>
 
+#define ROWS 200
+#define COLS 300
+
+#define GRID 12 //= GRIDX*GRIDY
+#define GRIDX 3
+#define GRIDY 4
+
 using namespace cv;
 using namespace std;
 //using namespace std::chrono;
@@ -98,12 +105,31 @@ int ceiling(int num, int denom)
 	int x = num/denom;
 	return x + 1;
 }
+
+int index(node point)
+{
+	int row_num = point.curr.y/(ROWS/GRIDY);
+	int col_num = point.curr.x/(COLS/GRIDX);
+	return row_num*GRIDX + col_num;
+}
+
 int main(int argc, char** argv)
 {
-	int learning_paramter =  atoi(argv[1]);//argc ;
+	int learning_parameter[GRID];
+	for(int i=0; i<GRID; i++)
+	{
+		int n;
+		scanf("%d",&n);
+		learning_parameter[i];
+	}
     string s0 = "dataset/";
     string s1 = "img";
-    string s2 = argv[2];
+    int img_num;
+    scanf("%d",&img_num);
+    string s2;
+    stringstream out;
+    out << img_num;
+    s2 = out.str();
     string s3 = ".jpg";
 	//Mat a(500, 500, CV_8UC1, Scalar(0));
 	Mat a = imread(s0+s1+s2+s3,0);
@@ -147,8 +173,8 @@ int main(int argc, char** argv)
 	a.at<uchar>(p,o) = 200;
 	//111cout<<"Enter the co-ordinates of the destination1: "<<endl;
 	//cin>>dest.curr.x>>dest.curr.y;
-	dest.curr.x = 299;
-	dest.curr.y = 299;
+	dest.curr.x = COLS - 1;
+	dest.curr.y = ROWS - 1;
 	o = dest.curr.x;
 	p = dest.curr.y;
 	//if(a.at<uchar>(p,o)>150) {cout<<"destination is on the obstacle\n"; return 0;}
@@ -217,7 +243,7 @@ int main(int argc, char** argv)
 			{
 				angle = 1.57;
 			}
-			float magnitude = learning_paramter/pow(distance(qrand.curr.x, qrand.curr.y, obstacles[k].j, obstacles[k].i),2);
+			float magnitude = learning_parameter[index(qrand)]/pow(distance(qrand.curr.x, qrand.curr.y, obstacles[k].j, obstacles[k].i),2);
 			if(obstacles[k].j > qrand.curr.x && obstacles[k].i > qrand.curr.y)
 			{
 				net_field.magx += -magnitude*cos(angle);
