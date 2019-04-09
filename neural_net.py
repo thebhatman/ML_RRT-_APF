@@ -10,6 +10,7 @@ import sys
 import math
 import subprocess
 import preprocess
+import os
 
 img = cv2.imread('images/img0.jpg')
 ideal_path = open('data/finaloutput.txt')
@@ -23,32 +24,43 @@ def ispath(x,y):
 def loss(A_L,num):
 	#make graph and array
 	#print("apf.cpp "+str(A_L) +" "+str(num))
-	file_arg = "apf.cpp "+str(A_L)+" "+str(num)
-	subprocess.call(["g++",file_arg])
-	subprocess.call("./a.out")
-	text = open('file.txt',"r")
+	file_arg = str(A_L[0][0])+" "+str(num)
+	#subprocess.call(["g++",file_arg])
+	print("running ./apf " + file_arg)
+	os.system("./apf " + file_arg)
+	print("opening file")
+	text = open('apf_out.txt',"r")
 	array = []
 	for line in text:
 		lineSplit=line.split(" ")
+		lineSplit = lineSplit[:-1]
 		for word in lineSplit:
+			#print(word)
 			array.append(int(word))
 	return lossfunction(array,num)
 
 def lossfunction(epoch_array,num):
 	step_down = 100
 	error = 0
-	lineSplit=ideal_path[num].split(" ")
+	count = 1
+	for line in ideal_path:
+		if(count==num):
+			lineSplit = line.split(" ")
+			break
+		count+=1
+	lineSplit = lineSplit[:-1]
 	i = 0
 	ideal = 0
 	for word in lineSplit:
-		if word == '(' or word == ',' or word == ')':
+		if word == '(' or word == ',' or word == ')' or word == '' or word == ' ':
 			continue
 		else:
 			ideal = epoch_array[i]
 			i+=1
-			error += (int(ideal) - int(word))*(int(ideal) - int(epochx)) 
+			#print(word)
+			error += (int(ideal) - int(word))*(int(ideal) - int(word)) 
 			
-	return error/step_down
+	return np.array([[error/step_down]])
 
 def sigmoid(Z):
 	return 1/(1 + np.exp(-Z))
@@ -133,8 +145,9 @@ def backward_prop(A_L,caches,i):
 	grads = {}
 	L = len(caches) 
 	m = A_L.shape[1]
-	print((np.transpose(A_L))[0][0])    
-	dA_L = loss(np.transpose(A_L)[0][0],i)
+	print((np.transpose(A_L)))    
+	dA_L = loss(np.transpose(A_L),i)
+	print("loss calculated")
 	current_cache = caches[L-1]
 	grads["dA" + str(L)], grads["dW" + str(L)], grads["db" + str(L)] = linear_activation_backward(dA_L, current_cache, activation = "Output")
 	
@@ -160,12 +173,18 @@ def update_parameters(parameters, grads, learning_rate):
 def final_model(X, layers_dims, learning_rate, iterations, print_cost=False):
 	costs = [] 
 	weights = initialize_parameters_deep(layers_dims)
-	
-	for i in range(0, iterations):
-		A_L, caches = forward_prop(X, weights)
+	parameters = None
+	for i in range(1, iterations):
+		A_L, caches = forward_prop(X[:,i:i+1], weights)
 		#print(A_L)
+		print("Going to backprop")
 		grads = backward_prop(A_L, caches,i)
+		print("updating params")
 		parameters = update_parameters(weights, grads, learning_rate)
+		print("params updated")
+
+	final_pot = forward_prop(X[:,0:1],parameters)
+	print(final_pot[0])
 
 number_of_features = 57
 features = preprocess.all_circles("data/obst.txt")
@@ -181,7 +200,7 @@ for i in range(training_set_size):
 #X_all = np.transpose(X_all)
 
 learning_rate = 0.01
-iterations = 1
+iterations = 10
 n_x = 57 
 #print(n_x," nnxnxnnxnxn")  
 n_y = 1

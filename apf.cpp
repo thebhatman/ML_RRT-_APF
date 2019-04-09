@@ -11,6 +11,13 @@
 #include <vector>
 #include <queue>
 
+#define ROWS 200
+#define COLS 300
+
+#define GRID 12 //= GRIDX*GRIDY
+#define GRIDX 3
+#define GRIDY 4
+
 using namespace cv;
 using namespace std;
 //using namespace std::chrono;
@@ -98,12 +105,31 @@ int ceiling(int num, int denom)
 	int x = num/denom;
 	return x + 1;
 }
+
+int index(node point)
+{
+	int row_num = point.curr.y/(ROWS/GRIDY);
+	int col_num = point.curr.x/(COLS/GRIDX);
+	return row_num*GRIDX + col_num;
+}
+
 int main(int argc, char** argv)
 {
-	int learning_paramter =  atoi(argv[1]);//argc ;
-    string s0 = "dataset/";
+	float learning_parameter[GRID];
+	for(int i=0; i<GRID; i++)
+	{
+		float n;
+		scanf("%f",&n);
+		learning_parameter[i] = n;
+	}
+    string s0 = "defensive_dataset/";
     string s1 = "img";
-    string s2 = argv[2];
+    int img_num;
+    scanf("%d",&img_num);
+    string s2;
+    stringstream out;
+    out << img_num;
+    s2 = out.str();
     string s3 = ".jpg";
 	//Mat a(500, 500, CV_8UC1, Scalar(0));
 	cout<<s0+s1+s2+s3<<endl;
@@ -140,16 +166,16 @@ int main(int argc, char** argv)
 	node source, dest;
 	//cout<<"Enter the co-ordinates of the source"<<endl;
 	//cin>>source.curr.x>>source.curr.y;
-	source.curr.x = 0;
-	source.curr.y = 0;
+	source.curr.x = COLS*3/4;
+	source.curr.y = ROWS*1/2;
 	int o = source.curr.x;
 	int p = source.curr.y;
 	//if(a.at<uchar>(p,o)>150) {cout<<"source is on the obstacle\n"; return 0;}
 	a.at<uchar>(p,o) = 200;
 	//111cout<<"Enter the co-ordinates of the destination1: "<<endl;
 	//cin>>dest.curr.x>>dest.curr.y;
-	dest.curr.x = 299;
-	dest.curr.y = 299;
+	dest.curr.x = 10;
+	dest.curr.y = ROWS/2;
 	o = dest.curr.x;
 	p = dest.curr.y;
 	//if(a.at<uchar>(p,o)>150) {cout<<"destination is on the obstacle\n"; return 0;}
@@ -168,6 +194,7 @@ int main(int argc, char** argv)
 	curr_tree_size = srctree.size();
 	namedWindow("star_apf",WINDOW_NORMAL);
     imshow("star_apf",a);
+    while(waitKey(10)!=27){}
 	while(1)
 	{
 		node qnew;
@@ -218,7 +245,7 @@ int main(int argc, char** argv)
 			{
 				angle = 1.57;
 			}
-			float magnitude = learning_paramter/pow(distance(qrand.curr.x, qrand.curr.y, obstacles[k].j, obstacles[k].i),2);
+			float magnitude = learning_parameter[index(qrand)]/pow(distance(qrand.curr.x, qrand.curr.y, obstacles[k].j, obstacles[k].i),2);
 			if(obstacles[k].j > qrand.curr.x && obstacles[k].i > qrand.curr.y)
 			{
 				net_field.magx += -magnitude*cos(angle);
@@ -432,8 +459,8 @@ int main(int argc, char** argv)
 
 		}
 
-		//imshow("star_apf",a);
-		//waitKey(2);
+		imshow("star_apf",a);
+		waitKey(2);
 		if(dist(qnew, dest) <= 2*max_step_size)
 		{
 			dest.mommy.curr.x = qnew.curr.x; dest.mommy.curr.y = qnew.curr.y;
@@ -446,11 +473,12 @@ int main(int argc, char** argv)
 		}
 
 	}
+	imwrite("final_tree.png",a);
     //imshow("star_apf",a);
-    //namedWindow("Final_apf", WINDOW_NORMAL);
+    namedWindow("Final_apf", WINDOW_NORMAL);
 	vector<node> path_points;
 	node mover;
-	int required_path_points = 50;
+	int required_path_points = 51;
 	int existing_path_points=0;
 	int approx_step;
 	k = srctree.size() - 1;
@@ -503,7 +531,7 @@ int main(int argc, char** argv)
 	ofstream myfile;
   	myfile.open ("apf_out.txt");
   	//myfile << "Writing this to a file.\n";
-  	
+  	cout << n_num<< endl;
 	for(i = n_num - 1; i >= 0; i--) 
 	{
 		myfile<<(int)path_points[i].curr.x<<" "<<(int)path_points[i].curr.y<<" ";
@@ -511,9 +539,10 @@ int main(int argc, char** argv)
 	//ofs.open("test.txt", std::ofstream::out | std::ofstream::trunc);
 	//cout<<endl<<n_num;
 	myfile.close();
+	imwrite("final_path.png",b);
+	imshow("Final_apf", b);
 
-	//imshow("Final_apf", b);
-	//while(waitKey(0)!=27){}2
+	while(waitKey(0)!=27){}
 	//cout << stop - start << endl;
 	return 0;
 }

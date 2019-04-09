@@ -52,88 +52,59 @@ int main()
 {
 	int i,j,k, flagx = 0, flagy = 0, fx = 0, fy = 0;
 	point dest;
-	dest.x = ROWS - 1;
-	dest.y = COLS - 1;
-	ifstream path_file("data/output.txt");
+	dest.x = ROWS/2;
+	dest.y = 0;
+	ifstream path_file("data/smoke_pot.txt");
 	string path_line;
-	FILE *fp;
+	// FILE *fp;
 	
-    int number = DATASET;
-    string s = "dataset/";
+    int number = 0;
+    string s = "defensive_dataset/";
     string s1 = "img";
     string s3 = ".jpg";
     Mat img;
-	fp = fopen("data/features.txt", "r");
+	// fp = fopen("data/features.txt", "r");
 	while(getline(path_file, path_line))
 	{
 
 	//getline(path_file,path_line);
 		stringstream ss;
-		ss<<(DATASET-number);
+		ss<<(number/12);
 
-		number--;
+		number++;
 		string s2 = ss.str();
 		//cout<<s2<<endl;
 		img = imread(s+s1+s2+s3,0);
 		//cout<<"ros "<<img.rows<<" "<<img.cols<<endl;
-		i = 2;
+		i = 0;
 		//cout<<path_line[3]<<endl;
 		vector<point> path_points;
 		while(i < path_line.length())
 		{
 			point temp;
-			//cout<<path_line[i]<<endl;
-			flagx = 0; flagy = 0;
-			if(path_line[i+1] != ',')
-			{	
-				temp.x = (path_line[i]-'0')*10 + path_line[i+1] - '0';
-				flagx = 1;
-			}
-			else
+			string x;
+			string y;
+			if(path_line[i]=='(')
 			{
-				temp.x = path_line[i] - '0';
-			}
-			if(flagx)
-			{
-				if(path_line[i+4] != ')')
+				i++;
+				while(path_line[i]!=',')
 				{
-					temp.y = (path_line[i+3] - '0')*10 + path_line[i+4] - '0';
-					flagy = 1;
+					x.push_back(path_line[i]);
+					i++;
 				}
-				else
+				i++;
+				while(path_line[i]!=')')
 				{
-					temp.y = path_line[i+3] - '0';
+					y.push_back(path_line[i]);
+					i++;
 				}
 			}
-			else
-			{
-				if(path_line[i+3] != ')')
-				{
-					temp.y = (path_line[i+2] - '0')*10 + path_line[i+3] - '0';
-					flagy = 1;
-				}
-				else
-				{
-					temp.y = path_line[i+2] - '0';
-				}
-			}
-
-			if(!flagx && !flagy)
-			{
-				i = i+7;
-			}
-			if(flagx && !flagy)
-			{
-				i = i+8;
-			}
-			if(!flagx && flagy)
-			{
-				i = i+8;
-			}
-			if(flagx && flagy)
-			{
-				i = i+9;
-			}
+			while(path_line[i]!='(')	
+				i++;
+			// cout << "x = " << x << endl;
+			// cout << "y = " << y << endl;
+			temp.x = std::stoi(x);
+			temp.y = std::stoi(y);
 			//img.at<uchar>(temp.x, temp.y) = 100;
 			//cout<<path_line[i]<<endl;
 			path_points.push_back(temp);	
@@ -159,9 +130,10 @@ int main()
 			int obs_number = 0;
 			
 			for(m=0; m<ROWS; m++)
+			{
 				for(n=0; n<COLS; n++)
 				{
-					if((int)img.at<uchar>(m,n) >= 150)
+					if((int)(img.at<uchar>(m,n)) >= 150)
 					{
 						obs_number++;
 						point obs;
@@ -172,20 +144,21 @@ int main()
 						POT.y += temp.y;
 					}					
 				}
-				POT.x /= obs_number;
-				POT.y /= obs_number;
-				float optimal_slope = slope(path_points[iter], path_points[iter+1]);
-				POTENTIAL dest_POT;
-				//cout<<POT.x<<"------"<<POT.y<<endl;
-				float mag = pow(dist(dest,path_points[iter]),2);
-				float angle = atan2(dest.y - path_points[iter].y, dest.x - path_points[iter].x);
-				dest_POT.x = mag*cos(angle);
-				dest_POT.y = mag*sin(angle);
-				//cout<<"====>"<<dest_POT.y<<endl;
-				//cout<<"BOOO "<<(optimal_slope*dest_POT.x)<<endl;
-				if(optimal_slope*POT.x == POT.y)
-					FIELD += INT_MAX;
-				else
+			}
+			POT.x /= obs_number;
+			POT.y /= obs_number;
+			float optimal_slope = slope(path_points[iter], path_points[iter+1]);
+			POTENTIAL dest_POT;
+			//cout<<POT.x<<"------"<<POT.y<<endl;
+			float mag = pow(dist(dest,path_points[iter]),2);
+			float angle = atan2(dest.y - path_points[iter].y, dest.x - path_points[iter].x);
+			dest_POT.x = mag*cos(angle);
+			dest_POT.y = mag*sin(angle);
+			//cout<<"====>"<<dest_POT.y<<endl;
+			//cout<<"BOOO "<<(optimal_slope*dest_POT.x)<<endl;
+			if(optimal_slope*POT.x == POT.y)
+				FIELD += INT_MAX;
+			else
 				FIELD += (dest_POT.y-(optimal_slope*dest_POT.x))/((optimal_slope*POT.x)-POT.y);
 			//cout<<"Num = "<<(dest_POT.y-(optimal_slope*dest_POT.x));
 			//cout<<"Denom = "<<((optimal_slope*POT.x)-POT.y);
@@ -193,7 +166,9 @@ int main()
 		}
 
 		FIELD /= path_points.size();
-		cout<<FIELD<<endl;
+		cout<<FIELD<< " " ;
+		if(number%12==0)
+			cout << endl;
 	}
 	
 	return 0;

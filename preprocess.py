@@ -3,16 +3,32 @@ import numpy as np
 import sys
 
 DATA = 50000
-F_no = 57
+F_no = 8
+G_no = 12
 
-def potential(filename):
-	distance = open(filename,"r")
-	pot = []
-	for line in distance:
+def feautures_ssl(filename,size):
+	array = np.zeros(shape = (size,F_no))
+	obs = open(filename,"r")
+	i = 0
+	for line in obs:
+		lineSplit = line.split(" ")
+		#lineSplit = lineSplit[:-1]
+		for cor in range(F_no):
+			array[i][cor] = (lineSplit[(cor)])
+		i+=1
+	return array
+
+def potential(filename,size):
+	pot = open(filename,"r")
+	array = np.zeros(shape = (size,G_no))
+	i = 0
+	for line in pot:
 		lineSplit=line.split(" ")
-		pot.append(lineSplit[0])
+		for k in range(G_no):
+			array[i][k]=(lineSplit[k])
+		i+=1
 
-	return pot
+	return array
 
 def func_num(filename):
 	num = open(filename,"r")
@@ -41,48 +57,7 @@ def features(filename):
 		area.append(lineSplit[2])
 	return area
 	
-def all_circles(filename):
-	number = func_num("data/number.txt")
-	print(len(number))
-	num  = 0
-	obs = open(filename,"r")
-	k = 0
-	array = np.zeros(shape = (DATA, F_no))
-	i =  0
-	line = 0
-	j = 0
-	for i in range(1,len(number)):
-		number[i] = number[i] + number[i-1]
-	#for i in range(100000):
-	
-	i = 0
-	for line in obs:
-		#for j in range(24):
-		if (k >= int(number[num])):
-			#print("j=",j)
-			while(j < F_no):
-				array[num][j] = 0
-				j += 1
-			num += 1
-			j = 0
-			#continue
-		
-		#print("j = ",j)
-		lineSplit = line.split(" ")
-		array[num][j] = lineSplit[0]
-		array[num][j+1] = lineSplit[1]
-		array[num][j+2] = lineSplit[2]
-		j += 3
-		k += 1
-		if(num == DATA-1):
-			while(j < F_no):
-				array[num][j] = 0
-				j += 1
-			break
-		#print(k)
-		#continue
-	
-	return array
+
 		
 
 #all_circles("data/obst.txt")
