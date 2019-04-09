@@ -132,6 +132,7 @@ int main(int argc, char** argv)
     s2 = out.str();
     string s3 = ".jpg";
 	//Mat a(500, 500, CV_8UC1, Scalar(0));
+	cout<<s0+s1+s2+s3<<endl;
 	Mat a = imread(s0+s1+s2+s3,0);
 	a=bin(a);
 
